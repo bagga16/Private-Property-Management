@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:private_property_management/Widgest/CustomTextField.dart';
 
-class AddUnitScreen extends StatelessWidget {
+class AddUnitScreen extends StatefulWidget {
   const AddUnitScreen({super.key});
 
+  @override
+  State<AddUnitScreen> createState() => _AddUnitScreenState();
+}
+
+class _AddUnitScreenState extends State<AddUnitScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +70,7 @@ class AddUnitScreen extends StatelessWidget {
               const SizedBox(height: 100),
               Center(
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width - 98,
+                  width: MediaQuery.of(context).size.width - 96,
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {},

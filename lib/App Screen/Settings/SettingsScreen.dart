@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:private_property_management/Home.dart';
 
 class Settingsscreen extends StatefulWidget {
   const Settingsscreen({super.key});
@@ -23,9 +24,12 @@ class _SettingsscreenState extends State<Settingsscreen> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    ),
                     child: const CircleAvatar(
                       radius: 20,
                       backgroundColor: Color.fromRGBO(245, 244, 248, 1),

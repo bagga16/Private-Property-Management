@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:private_property_management/App%20Screen/Proprties/Units/AddUnitScreen.dart';
 import 'package:private_property_management/Models/UnitModel.dart';
-import 'package:private_property_management/Widgest/CustomTextField.dart';
+import 'package:private_property_management/Widgest/UnitCard.dart';
+import 'UnitDetailsScreen.dart';
 
 class UnitsListScreen extends StatelessWidget {
   const UnitsListScreen({super.key});
@@ -13,18 +15,28 @@ class UnitsListScreen extends StatelessWidget {
         unitId: "1163213",
         propertyId: "1163213",
         status: "Occupied",
-        rentAmount: "\$235/month",
+        rentAmount: "\$235/",
         area: "150 sq. ft",
         createdDate: "20/01/2024",
         updatedDate: "20/01/2024",
       ),
       UnitModel(
-        name: "Apartment 101",
-        unitId: "1163214",
+        name: "Apartment 5C",
+        unitId: "1163213",
         propertyId: "1163213",
         status: "Vacant",
-        rentAmount: "\$300/month",
-        area: "200 sq. ft",
+        rentAmount: "\$235/",
+        area: "150 sq. ft",
+        createdDate: "20/01/2024",
+        updatedDate: "20/01/2024",
+      ),
+      UnitModel(
+        name: "Apartment 5C",
+        unitId: "1163213",
+        propertyId: "1163213",
+        status: "Under Maintenance",
+        rentAmount: "\$235/",
+        area: "150 sq. ft",
         createdDate: "20/01/2024",
         updatedDate: "20/01/2024",
       ),
@@ -32,125 +44,96 @@ class UnitsListScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          "Units",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color.fromRGBO(37, 43, 92, 1),
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add, color: Colors.black),
-            onPressed: () {
-              // Navigate to Add Unit Screen
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CustomTextField(hintText: "Search Here"),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: units.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(245, 245, 255, 1),
-                      borderRadius: BorderRadius.circular(12),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Color.fromRGBO(245, 244, 248, 1),
+                      child: Icon(Icons.arrow_back_ios_new,
+                          color: Color.fromRGBO(37, 43, 92, 1), size: 18),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              units[index].name,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromRGBO(37, 43, 92, 1),
-                              ),
-                            ),
-                            Text(
-                              units[index].status,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: units[index].status == "Occupied"
-                                    ? Colors.red
-                                    : const Color.fromRGBO(139, 200, 63, 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Unit ID: ${units[index].unitId}",
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromRGBO(115, 115, 115, 1),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              units[index].rentAmount,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromRGBO(37, 43, 92, 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Area: ${units[index].area}",
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(115, 115, 115, 1),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Created: ${units[index].createdDate}",
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            Text(
-                              "Updated: ${units[index].updatedDate}",
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ],
+                  ),
+                  const Text(
+                    "Units",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromRGBO(37, 43, 92, 1),
                     ),
-                  );
-                },
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddUnitScreen()),
+                    ),
+                    child: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Color.fromRGBO(37, 43, 92, 1),
+                      child: Icon(Icons.add, color: Colors.white, size: 22),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+
+              // Search Bar
+              Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(245, 244, 248, 1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const TextField(
+                  decoration: InputDecoration(
+                    hintText: "Search Here",
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(115, 115, 115, 1),
+                    ),
+                    border: InputBorder.none,
+                    suffixIcon: Icon(Icons.search,
+                        color: Color.fromRGBO(37, 43, 92, 1), size: 22),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Units List
+              Expanded(
+                child: ListView.builder(
+                  itemCount: units.length,
+                  itemBuilder: (context, index) {
+                    return UnitCard(
+                      unit: units[index],
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UnitDetailsScreen(
+                              unit: units[index],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

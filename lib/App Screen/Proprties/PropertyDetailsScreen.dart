@@ -307,10 +307,10 @@ class PropertyDetailsScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const Row(
                 children: [
-                  const Icon(Icons.location_on,
+                  Icon(Icons.location_on,
                       size: 17, color: Color.fromRGBO(139, 200, 63, 1)),
-                  const SizedBox(width: 2),
-                  const Text(
+                  SizedBox(width: 2),
+                  Text(
                     "Street, City, State, Zip Code, Country",
                     style: TextStyle(
                       fontSize: 13.5,

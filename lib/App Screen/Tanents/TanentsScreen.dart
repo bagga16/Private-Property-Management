@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:private_property_management/App%20Screen/DashBoardScreen/DashBoardScreen.dart';
 import 'package:private_property_management/App%20Screen/Tanents/AddTenantScreen.dart';
 import 'package:private_property_management/App%20Screen/Tanents/TenantDetailsScreen.dart';
+import 'package:private_property_management/Home.dart';
 
 class TenantsScreen extends StatelessWidget {
   const TenantsScreen({super.key});
@@ -63,12 +65,17 @@ class TenantsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    ),
                     child: const CircleAvatar(
                       radius: 22,
                       backgroundColor: Color.fromRGBO(245, 244, 248, 1),
                       child: Icon(Icons.arrow_back_ios_new,
-                          color: Color.fromRGBO(37, 43, 92, 1), size: 18),
+                          color: Color.fromRGBO(37, 43, 92, 1), size: 16),
                     ),
                   ),
                   const Text(
@@ -84,14 +91,14 @@ class TenantsScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddTanentsScreen(),
+                          builder: (context) => const AddTanentsScreen(),
                         ),
                       );
                     },
                     child: const CircleAvatar(
                       radius: 22,
                       backgroundColor: Color.fromRGBO(37, 43, 92, 1),
-                      child: Icon(Icons.add, color: Colors.white, size: 20),
+                      child: Icon(Icons.add, color: Colors.white, size: 22),
                     ),
                   ),
                 ],
@@ -111,9 +118,10 @@ class TenantsScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: "Search Here",
                     hintStyle: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
+                      height: 2,
                       fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(115, 115, 115, 1),
+                      color: Color.fromRGBO(37, 43, 92, 1),
                     ),
                     border: InputBorder.none,
                     suffixIcon: Icon(Icons.search,

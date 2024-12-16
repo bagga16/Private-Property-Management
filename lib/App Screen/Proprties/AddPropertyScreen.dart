@@ -82,7 +82,7 @@ class AddPropertyScreen extends StatelessWidget {
               const SizedBox(height: 100),
               Center(
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width - 98,
+                  width: MediaQuery.of(context).size.width - 96,
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {},

@@ -1,4 +1,5 @@
 class WorkerModel {
+  final int id;
   final String name;
   final String role;
   final String email;
@@ -7,6 +8,7 @@ class WorkerModel {
   final String updatedDate;
 
   WorkerModel({
+    required this.id,
     required this.name,
     required this.role,
     required this.email,
