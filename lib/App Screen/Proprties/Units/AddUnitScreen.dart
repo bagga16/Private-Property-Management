@@ -7,58 +7,84 @@ class AddUnitScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          "Add Unit",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color.fromRGBO(37, 43, 92, 1),
-          ),
-        ),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            const CustomTextField(hintText: "Unit ID"),
-            const SizedBox(height: 12),
-            const CustomTextField(hintText: "Unit Number / Name"),
-            const SizedBox(height: 12),
-            const CustomTextField(hintText: "Unit Type"),
-            const SizedBox(height: 12),
-            const CustomTextField(hintText: "Area"),
-            const SizedBox(height: 12),
-            const CustomTextField(hintText: "Rent Amount"),
-            const SizedBox(height: 12),
-            const CustomTextField(hintText: "Availability Status"),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(139, 200, 63, 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 4),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 14,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Color.fromRGBO(245, 244, 248, 1),
+                      child: Icon(Icons.arrow_back_ios_new,
+                          color: Color.fromRGBO(37, 43, 92, 1), size: 16),
+                    ),
+                  ),
+                  const Text(
+                    "Add Unit",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color.fromRGBO(37, 43, 92, 1),
+                    ),
+                  ),
+                  const Text('           ')
+                ],
+              ),
+              const SizedBox(height: 16),
+              const CustomTextField(
+                  hintText: "Unit ID", height: 48, borderRadius: 10),
+              const SizedBox(height: 10),
+              const CustomTextField(
+                  height: 48, borderRadius: 10, hintText: "Unit Number / Name"),
+              const SizedBox(height: 10),
+              const CustomTextField(
+                  height: 48, borderRadius: 10, hintText: "Unit Type"),
+              const SizedBox(height: 10),
+              const CustomTextField(height: 48, hintText: "Area"),
+              const SizedBox(height: 10),
+              const CustomTextField(height: 48, hintText: "Rent Amount"),
+              const SizedBox(height: 10),
+              const CustomTextField(
+                  height: 48, hintText: "Availability Status"),
+              const SizedBox(height: 10),
+              const CustomTextField(
+                height: 156,
+                hintText: "Description",
+                focusBorderColor: Colors.transparent,
+              ),
+              const SizedBox(height: 100),
+              Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width - 98,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(139, 200, 63, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      "Add",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
                   ),
                 ),
-                onPressed: () {
-                  // Add Unit Logic
-                },
-                child: const Text(
-                  "Add",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 50),
+            ],
+          ),
         ),
       ),
     );

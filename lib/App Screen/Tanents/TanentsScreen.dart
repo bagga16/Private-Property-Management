@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:private_property_management/App%20Screen/Tanents/AddTenantScreen.dart';
+import 'package:private_property_management/App%20Screen/Tanents/TenantDetailsScreen.dart';
 
 class TenantsScreen extends StatelessWidget {
   const TenantsScreen({super.key});
@@ -77,10 +79,20 @@ class TenantsScreen extends StatelessWidget {
                       color: Color.fromRGBO(37, 43, 92, 1),
                     ),
                   ),
-                  const CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Color.fromRGBO(37, 43, 92, 1),
-                    child: Icon(Icons.add, color: Colors.white, size: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddTanentsScreen(),
+                        ),
+                      );
+                    },
+                    child: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Color.fromRGBO(37, 43, 92, 1),
+                      child: Icon(Icons.add, color: Colors.white, size: 20),
+                    ),
                   ),
                 ],
               ),
@@ -121,80 +133,92 @@ class TenantsScreen extends StatelessWidget {
                 itemCount: tenants.length,
                 itemBuilder: (context, index) {
                   final tenant = tenants[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.fromLTRB(16, 15, 12, 14),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(245, 244, 248, 1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Name and Rent Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  tenant["name"],
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color.fromRGBO(37, 43, 92, 1),
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to TenantDetailsScreen and pass tenant data
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TenantDetailsScreen(tenant: tenant),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.fromLTRB(16, 15, 12, 14),
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(245, 244, 248, 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Name and Rent Row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    tenant["name"],
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color.fromRGBO(37, 43, 92, 1),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 5),
-                                _buildStatusBadge(tenant["status"]),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  tenant["rent"],
-                                  style: const TextStyle(
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color.fromRGBO(139, 200, 63, 1),
+                                  const SizedBox(width: 5),
+                                  _buildStatusBadge(tenant["status"]),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    tenant["rent"],
+                                    style: const TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromRGBO(139, 200, 63, 1),
+                                    ),
                                   ),
-                                ),
-                                const Text(
-                                  "month",
-                                  style: TextStyle(
-                                    fontSize: 6.5,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromRGBO(139, 200, 63, 1),
+                                  const Text(
+                                    "month",
+                                    style: TextStyle(
+                                      fontSize: 6.5,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color.fromRGBO(139, 200, 63, 1),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        _buildIconRow(
-                          Icons.email,
-                          tenant["email"],
-                          tenant["tenantId"],
-                        ),
-                        const SizedBox(height: 5),
-                        _buildIconRow(
-                            Icons.phone, tenant["phone"], tenant["unitId"]),
-                        const SizedBox(height: 5),
-                        _buildDetailsRow(
-                          leftTitle: "Lease Start",
-                          leftValue: tenant["leaseStart"],
-                          rightTitle: "Lease End",
-                          rightValue: tenant["leaseEnd"],
-                        ),
-                        const SizedBox(height: 6),
-                        _buildDetailsRow(
-                          leftTitle: "Created",
-                          leftValue: tenant["createdDate"],
-                          rightTitle: "Updated",
-                          rightValue: tenant["updatedDate"],
-                        ),
-                      ],
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          _buildIconRow(
+                            Icons.email,
+                            tenant["email"],
+                            tenant["tenantId"],
+                          ),
+                          const SizedBox(height: 5),
+                          _buildIconRow(
+                              Icons.phone, tenant["phone"], tenant["unitId"]),
+                          const SizedBox(height: 5),
+                          _buildDetailsRow(
+                            leftTitle: "Lease Start",
+                            leftValue: tenant["leaseStart"],
+                            rightTitle: "Lease End",
+                            rightValue: tenant["leaseEnd"],
+                          ),
+                          const SizedBox(height: 6),
+                          _buildDetailsRow(
+                            leftTitle: "Created",
+                            leftValue: tenant["createdDate"],
+                            rightTitle: "Updated",
+                            rightValue: tenant["updatedDate"],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:private_property_management/Widgest/CustomTextField.dart';
 
-class AddPropertyScreen extends StatelessWidget {
-  const AddPropertyScreen({super.key});
+class AddTanentsScreen extends StatelessWidget {
+  const AddTanentsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class AddPropertyScreen extends StatelessWidget {
                     ),
                   ),
                   const Text(
-                    "Add Propery",
+                    "Add Tenant",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -42,43 +42,43 @@ class AddPropertyScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const CustomTextField(
-                  hintText: "Property ID", height: 48, borderRadius: 10),
+                  hintText: "Tenant ID", height: 48, borderRadius: 10),
               const SizedBox(height: 10),
               const CustomTextField(
-                  height: 48, borderRadius: 10, hintText: "Property Name"),
+                  height: 48, borderRadius: 10, hintText: "First Name"),
               const SizedBox(height: 10),
               const CustomTextField(
-                  height: 48, borderRadius: 10, hintText: "Address Line"),
+                  height: 48, borderRadius: 10, hintText: "Last Name"),
+              const SizedBox(height: 10),
+              const CustomTextField(
+                  height: 48, borderRadius: 10, hintText: "Email Address"),
+              const SizedBox(height: 10),
+              const CustomTextField(
+                  height: 48, borderRadius: 10, hintText: "Phone Number"),
               const SizedBox(height: 10),
               const Row(
                 children: [
                   Expanded(
-                      child: CustomTextField(height: 48, hintText: "City")),
+                      child: CustomTextField(
+                          height: 48, hintText: "Lease Start Date")),
                   SizedBox(width: 10),
                   Expanded(
-                      child: CustomTextField(height: 48, hintText: "State")),
+                      child: CustomTextField(
+                          height: 48, hintText: "Lease End Date")),
                 ],
               ),
               const SizedBox(height: 10),
-              const Row(
-                children: [
-                  Expanded(
-                      child: CustomTextField(height: 48, hintText: "Zip Code")),
-                  SizedBox(width: 10),
-                  Expanded(
-                      child: CustomTextField(height: 48, hintText: "Country")),
-                ],
-              ),
+              const CustomTextField(height: 48, hintText: "Monthly Rent"),
               const SizedBox(height: 10),
-              const CustomTextField(height: 48, hintText: "PropertyType"),
+              const CustomTextField(height: 48, hintText: "Unit ID"),
               const SizedBox(height: 10),
-              const CustomTextField(height: 48, hintText: "Stataus"),
+              const CustomTextField(height: 48, hintText: "Tenant Status"),
               const SizedBox(height: 10),
-              const CustomTextField(
-                height: 156,
-                hintText: "Description",
-                focusBorderColor: Colors.transparent,
-              ),
+              const CustomTextField(height: 48, hintText: "Security Deposit"),
+              const SizedBox(height: 10),
+              const CustomTextField(height: 48, hintText: "Payment Status"),
+              const SizedBox(height: 10),
+              const CustomTextField(height: 48, hintText: "Lease Document"),
               const SizedBox(height: 100),
               Center(
                 child: SizedBox(
