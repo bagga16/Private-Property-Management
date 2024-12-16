@@ -196,8 +196,8 @@ class _PropertiesscreenState extends State<Propertiesscreen> {
                         child: Text(
                           tabs[index],
                           style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
                             color: selectedTabIndex == index
                                 ? Colors.white
                                 : const Color.fromRGBO(37, 43, 92, 1),
