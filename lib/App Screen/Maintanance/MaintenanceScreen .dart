@@ -81,7 +81,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                           color: Color.fromRGBO(37, 43, 92, 1), size: 18),
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   const Text(
                     "Maintenance      ",
                     style: TextStyle(
@@ -90,7 +90,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       color: Color.fromRGBO(37, 43, 92, 1),
                     ),
                   ),
-                  Spacer()
+                  const Spacer()
                 ],
               ),
               const SizedBox(height: 18),
@@ -224,10 +224,11 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
-                                      color: Color.fromRGBO(37, 43, 92, 0.22),
+                                      color: const Color.fromRGBO(
+                                          37, 43, 92, 0.22),
                                       borderRadius: BorderRadius.circular(3)),
                                   child: _buildStatusTag(request['priority'],
-                                      Color.fromRGBO(37, 43, 92, 1)),
+                                      const Color.fromRGBO(37, 43, 92, 1)),
                                 ),
                               ],
                             ),
@@ -351,13 +352,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Open':
-        return Color.fromRGBO(158, 0, 0, 1);
+        return const Color.fromRGBO(158, 0, 0, 1);
       case 'In Progress':
-        return Color.fromRGBO(0, 21, 188, 1);
+        return const Color.fromRGBO(0, 21, 188, 1);
       case 'Resolved':
-        return Color.fromRGBO(0, 158, 61, 1);
+        return const Color.fromRGBO(0, 158, 61, 1);
       default:
-        return Color.fromRGBO(37, 43, 92, 1);
+        return const Color.fromRGBO(37, 43, 92, 1);
     }
   }
 

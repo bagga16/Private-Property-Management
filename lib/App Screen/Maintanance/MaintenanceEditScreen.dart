@@ -98,7 +98,7 @@ class MaintenanceEditScreen extends StatelessWidget {
                         color: Color.fromRGBO(37, 43, 92, 1),
                       ),
                     ),
-                    Text("        "),
+                    const Text("        "),
                   ],
                 ),
                 const SizedBox(height: 12),

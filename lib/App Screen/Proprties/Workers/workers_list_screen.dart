@@ -232,7 +232,7 @@ class WorkersListScreen extends StatelessWidget {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: '${worker.createdDate}',
+                                      text: worker.createdDate,
                                       style: const TextStyle(
                                         fontSize: 9.4,
                                         fontWeight: FontWeight.w600,
@@ -252,7 +252,7 @@ class WorkersListScreen extends StatelessWidget {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: '${worker.updatedDate}',
+                                      text: worker.updatedDate,
                                       style: const TextStyle(
                                         fontSize: 9.4,
                                         fontWeight: FontWeight.w600,

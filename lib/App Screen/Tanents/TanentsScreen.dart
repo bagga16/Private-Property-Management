@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:private_property_management/App%20Screen/DashBoardScreen/DashBoardScreen.dart';
 import 'package:private_property_management/App%20Screen/Tanents/AddTenantScreen.dart';
 import 'package:private_property_management/App%20Screen/Tanents/TenantDetailsScreen.dart';
 import 'package:private_property_management/Home.dart';

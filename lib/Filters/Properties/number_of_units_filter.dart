@@ -42,15 +42,20 @@ class _NumberOfUnitsFilterState extends State<NumberOfUnitsFilter> {
                   children: [
                     Flexible(child: _buildRadioOption("10")),
                     Flexible(child: _buildRadioOption("20")),
-                    Flexible(child: _buildRadioOption("Above 20")),
+                    Flexible(child: _buildRadioOption("30")),
                   ],
                 ),
                 Row(
                   children: [
+                    Flexible(child: _buildRadioOption("Above 20")),
                     Flexible(child: _buildRadioOption("Below 20")),
-                    Flexible(child: _buildRadioOption("Manually")),
                   ],
                 ),
+                Row(
+                  children: [
+                    Flexible(child: _buildRadioOption("Manually")),
+                  ],
+                )
               ],
             ),
             const SizedBox(height: 16),
@@ -117,7 +122,7 @@ class _NumberOfUnitsFilterState extends State<NumberOfUnitsFilter> {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 13.5,
               fontWeight: FontWeight.w500,
               color: Color.fromRGBO(37, 43, 92, 1),
             ),

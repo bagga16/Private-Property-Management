@@ -104,10 +104,10 @@ class UnitCard extends StatelessWidget {
                       fontSize: 9,
                       fontWeight: FontWeight.w500,
                       color: unit.status == "Occupied"
-                          ? Color.fromRGBO(158, 0, 0, 1)
+                          ? const Color.fromRGBO(158, 0, 0, 1)
                           : unit.status == "Vacant"
                               ? const Color.fromRGBO(0, 158, 61, 1)
-                              : Color.fromRGBO(0, 21, 188, 1)),
+                              : const Color.fromRGBO(0, 21, 188, 1)),
                 ),
               ],
             ),

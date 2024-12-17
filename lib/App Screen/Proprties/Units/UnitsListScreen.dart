@@ -74,7 +74,8 @@ class UnitsListScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AddUnitScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const AddUnitScreen()),
                     ),
                     child: const CircleAvatar(
                       radius: 22,
