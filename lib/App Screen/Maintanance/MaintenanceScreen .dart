@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/AssignedToFilter.dart';
+import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/PriorityStatus.dart';
+import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/ProgressStatusFilter.dart';
+import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/RequestedDateRangeFilter.dart';
 import 'package:private_property_management/App%20Screen/Tanents/PreorityStatus.dart';
 import 'package:private_property_management/Filters/Properties/PropertiesType.dart';
 import 'package:private_property_management/Filters/Properties/location_filter.dart';
@@ -20,10 +24,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       "id": "120546",
       "tenantId": "20012024",
       "unitId": "1163213",
-      "requestedDate": "20/01/2024",
+      "requestedDate": "10/01/2024",
       "priority": "High",
       "status": "Open",
-      "resolvedDate": "",
+      "resolvedDate": "11/01/2024",
     },
     {
       "id": "120547",
@@ -32,16 +36,16 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       "requestedDate": "20/01/2024",
       "priority": "Medium",
       "status": "In Progress",
-      "resolvedDate": "",
+      "resolvedDate": "21/01/2024",
     },
     {
       "id": "120548",
       "tenantId": "20012024",
       "unitId": "1163213",
-      "requestedDate": "",
+      "requestedDate": "22/01/2024",
       "priority": "Low",
       "status": "Resolved",
-      "resolvedDate": "20/01/2024",
+      "resolvedDate": "24/01/2024",
     },
   ];
   int selectedTabIndex = 0;
@@ -362,25 +366,25 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       case 0:
         showDialog(
           context: context,
-          builder: (context) => const PropertyTypeFilter(),
+          builder: (context) => const Prioritystatus(),
         );
         break;
       case 1:
         showDialog(
           context: context,
-          builder: (context) => const NumberOfUnitsFilter(),
+          builder: (context) => const Progressstatusfilter(),
         );
         break;
       case 2:
         showDialog(
           context: context,
-          builder: (context) => const LocationFilter(),
+          builder: (context) => const Assignedtofilter(),
         );
         break;
       case 3:
         showDialog(
           context: context,
-          builder: (context) => const StatusFilter(),
+          builder: (context) => const Requesteddaterangefilter(),
         );
         break;
     }
