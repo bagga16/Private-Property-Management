@@ -25,7 +25,7 @@ class CustomTextField extends StatelessWidget {
     this.contentPadding,
     this.hintStyle,
     this.readOnly = false,
-    this.height = 70.0, // Default height
+    this.height = 70.0,
   });
 
   @override
