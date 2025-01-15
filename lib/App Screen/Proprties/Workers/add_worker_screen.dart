@@ -23,6 +23,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
       createdDate: "20/01/2024",
       updatedDate: "20/01/2024",
       status: "Active",
+      imagePath: '',
     ),
     PropertyModel(
       title: "Blue Horizon",
@@ -35,6 +36,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
       createdDate: "20/01/2024",
       updatedDate: "20/01/2024",
       status: "Active",
+      imagePath: '',
     ),
   ];
 

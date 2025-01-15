@@ -1,5 +1,6 @@
 class UnitModel {
   final String name;
+  final String imagePath;
   final String unitId;
   final String propertyId;
   final String status;
@@ -9,6 +10,7 @@ class UnitModel {
   final String updatedDate;
 
   UnitModel({
+    required this.imagePath,
     required this.name,
     required this.unitId,
     required this.propertyId,

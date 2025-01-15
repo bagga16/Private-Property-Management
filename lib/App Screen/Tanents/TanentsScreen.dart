@@ -2,52 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:private_property_management/App%20Screen/Tanents/AddTenantScreen.dart';
 import 'package:private_property_management/App%20Screen/Tanents/TenantDetailsScreen.dart';
 import 'package:private_property_management/Home.dart';
+import 'package:private_property_management/Models/TenantModel.dart';
 
-class TenantsScreen extends StatelessWidget {
+class TenantsScreen extends StatefulWidget {
   const TenantsScreen({super.key});
 
   @override
+  State<TenantsScreen> createState() => _TenantsScreenState();
+}
+
+class _TenantsScreenState extends State<TenantsScreen> {
+  @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> tenants = [
-      {
-        "name": "John Martin",
-        "status": "Active",
-        "email": "example@gmail.com",
-        "phone": "+1 321 2552 3321",
-        "tenantId": "1163213",
-        "unitId": "1163213",
-        "leaseStart": "20/01/2024",
-        "leaseEnd": "20/01/2024",
-        "createdDate": "20/01/2024",
-        "updatedDate": "20/01/2024",
-        "rent": "\$235/",
-      },
-      {
-        "name": "John Martin",
-        "status": "Former Tenant",
-        "email": "example@gmail.com",
-        "phone": "+1 321 2552 3321",
-        "tenantId": "1163213",
-        "unitId": "1163213",
-        "leaseStart": "20/01/2024",
-        "leaseEnd": "20/01/2024",
-        "createdDate": "20/01/2024",
-        "updatedDate": "20/01/2024",
-        "rent": "\$235/",
-      },
-      {
-        "name": "John Martin",
-        "status": "Active",
-        "email": "example@gmail.com",
-        "phone": "+1 321 2552 3321",
-        "tenantId": "1163213",
-        "unitId": "1163213",
-        "leaseStart": "20/01/2024",
-        "leaseEnd": "20/01/2024",
-        "createdDate": "20/01/2024",
-        "updatedDate": "20/01/2024",
-        "rent": "\$235/",
-      },
+    final List<Tenant> tenants = [
+      Tenant(
+        name: "John Martin",
+        status: "Active",
+        email: "example@gmail.com",
+        phone: "+1 321 2552 3321",
+        tenantId: "1163213",
+        unitId: "1134534",
+        leaseStart: "20/01/2024",
+        leaseEnd: "20/01/2024",
+        createdDate: "20/01/2024",
+        updatedDate: "20/01/2024",
+        rent: "\$235/",
+      ),
+      Tenant(
+        name: "John Martin",
+        status: "Former Tenant",
+        email: "example@gmail.com",
+        phone: "+1 321 2552 3321",
+        tenantId: "1163213",
+        unitId: "1134534",
+        leaseStart: "20/01/2024",
+        leaseEnd: "20/01/2024",
+        createdDate: "20/01/2024",
+        updatedDate: "20/01/2024",
+        rent: "\$235/",
+      ),
+      Tenant(
+        name: "John Martin",
+        status: "Active",
+        email: "example@gmail.com",
+        phone: "+1 321 2552 3321",
+        tenantId: "1163213",
+        unitId: "1134534",
+        leaseStart: "20/01/2024",
+        leaseEnd: "20/01/2024",
+        createdDate: "20/01/2024",
+        updatedDate: "20/01/2024",
+        rent: "\$235/",
+      ),
     ];
 
     return Scaffold(
@@ -146,8 +152,9 @@ class TenantsScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              TenantDetailsScreen(tenant: tenant),
+                          builder: (context) => TenantDetailsScreen(
+                            tenant: {},
+                          ),
                         ),
                       );
                     },
@@ -168,7 +175,7 @@ class TenantsScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    tenant["name"],
+                                    tenant.name,
                                     style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,
@@ -176,13 +183,13 @@ class TenantsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(width: 5),
-                                  _buildStatusBadge(tenant["status"]),
+                                  _buildStatusBadge(tenant.status),
                                 ],
                               ),
                               Row(
                                 children: [
                                   Text(
-                                    tenant["rent"],
+                                    tenant.rent,
                                     style: const TextStyle(
                                       fontSize: 12.5,
                                       fontWeight: FontWeight.w600,
@@ -202,27 +209,53 @@ class TenantsScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 5),
-                          _buildIconRow(
-                            Icons.email,
-                            tenant["email"],
-                            tenant["tenantId"],
-                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildIconRow(
+                                  Icons.email,
+                                  tenant.email,
+                                ),
+                                Text(
+                                  "TenantID: ${tenant.tenantId}",
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    color: Color.fromRGBO(83, 88, 122, 1),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                )
+                              ]),
                           const SizedBox(height: 5),
-                          _buildIconRow(
-                              Icons.phone, tenant["phone"], tenant["unitId"]),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildIconRow(
+                                Icons.phone,
+                                tenant.phone,
+                              ),
+                              Text(
+                                "UnitID: ${tenant.unitId}",
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  color: Color.fromRGBO(83, 88, 122, 1),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              )
+                            ],
+                          ),
                           const SizedBox(height: 5),
                           _buildDetailsRow(
                             leftTitle: "Lease Start",
-                            leftValue: tenant["leaseStart"],
+                            leftValue: tenant.leaseStart,
                             rightTitle: "Lease End",
-                            rightValue: tenant["leaseEnd"],
+                            rightValue: tenant.leaseEnd,
                           ),
                           const SizedBox(height: 6),
                           _buildDetailsRow(
                             leftTitle: "Created",
-                            leftValue: tenant["createdDate"],
+                            leftValue: tenant.createdDate,
                             rightTitle: "Updated",
-                            rightValue: tenant["updatedDate"],
+                            rightValue: tenant.updatedDate,
                           ),
                         ],
                       ),
@@ -263,7 +296,10 @@ class TenantsScreen extends StatelessWidget {
   }
 
   // Helper for Rows with Icons
-  Widget _buildIconRow(IconData icon, String value, subtitle) {
+  Widget _buildIconRow(
+    IconData icon,
+    String value,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -280,14 +316,6 @@ class TenantsScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
-        Text(
-          "Tanenat Id: $subtitle",
-          style: const TextStyle(
-            fontSize: 9,
-            fontWeight: FontWeight.w400,
-            color: Color.fromRGBO(83, 88, 122, 1),
-          ),
         ),
       ],
     );

@@ -37,10 +37,7 @@ class CustomTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: Focus(
-        onFocusChange: (hasFocus) {
-          // This is a debug line to show focus changes (optional):
-          // debugPrint("Focus: $hasFocus");
-        },
+        onFocusChange: (hasFocus) {},
         child: TextField(
           controller: controller,
           obscureText: isPassword,

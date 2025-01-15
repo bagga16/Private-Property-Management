@@ -12,7 +12,6 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
-    // Dummy notification data
     final List<NotificationModel> notifications = [
       NotificationModel(
         title: "Maintenance Request",

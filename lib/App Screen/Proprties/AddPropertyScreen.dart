@@ -1,22 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 import 'package:private_property_management/Widgest/CustomTextField.dart';
 
-class AddPropertyScreen extends StatelessWidget {
+class AddPropertyScreen extends StatefulWidget {
   const AddPropertyScreen({super.key});
+
+  @override
+  State<AddPropertyScreen> createState() => _AddPropertyScreenState();
+}
+
+class _AddPropertyScreenState extends State<AddPropertyScreen> {
+  final List<File> _selectedImages = [];
+
+  Future<void> _pickImages() async {
+    final ImagePicker picker = ImagePicker();
+    final List<XFile>? pickedFiles = await picker.pickMultiImage();
+
+    if (pickedFiles != null) {
+      setState(() {
+        _selectedImages.addAll(pickedFiles.map((file) => File(file.path)));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 4),
+        padding: const EdgeInsets.fromLTRB(24, 30, 24, 4),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 14,
-              ),
+              const SizedBox(height: 14),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -30,16 +49,70 @@ class AddPropertyScreen extends StatelessWidget {
                     ),
                   ),
                   const Text(
-                    "Add Propery",
+                    "Add Property",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: Color.fromRGBO(37, 43, 92, 1),
                     ),
                   ),
-                  const Text('           ')
+                  const Text('           '),
                 ],
               ),
+              const SizedBox(height: 16),
+              // Image Picker Section
+              GestureDetector(
+                onTap: _pickImages,
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(245, 244, 248, 1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_photo_alternate,
+                        size: 40,
+                        color: Color.fromRGBO(157, 178, 206, 1),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Add Image",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromRGBO(157, 178, 206, 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (_selectedImages.isNotEmpty)
+                SizedBox(
+                  height: 100,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _selectedImages.length,
+                    itemBuilder: (context, index) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          _selectedImages[index],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 12),
+                  ),
+                ),
               const SizedBox(height: 16),
               const CustomTextField(
                   hintText: "Property ID", height: 48, borderRadius: 10),
@@ -70,9 +143,9 @@ class AddPropertyScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              const CustomTextField(height: 48, hintText: "PropertyType"),
+              const CustomTextField(height: 48, hintText: "Property Type"),
               const SizedBox(height: 10),
-              const CustomTextField(height: 48, hintText: "Stataus"),
+              const CustomTextField(height: 48, hintText: "Status"),
               const SizedBox(height: 10),
               const CustomTextField(
                 height: 156,
@@ -85,7 +158,9 @@ class AddPropertyScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width - 96,
                   height: 60,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Handle Add button functionality
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(139, 200, 63, 1),
                       shape: RoundedRectangleBorder(

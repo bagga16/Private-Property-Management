@@ -19,6 +19,7 @@ class UnitsListScreen extends StatelessWidget {
         area: "150 sq. ft",
         createdDate: "20/01/2024",
         updatedDate: "20/01/2024",
+        imagePath: 'assets/images/1.png',
       ),
       UnitModel(
         name: "Apartment 5C",
@@ -29,6 +30,7 @@ class UnitsListScreen extends StatelessWidget {
         area: "150 sq. ft",
         createdDate: "20/01/2024",
         updatedDate: "20/01/2024",
+        imagePath: 'assets/images/2.png',
       ),
       UnitModel(
         name: "Apartment 5C",
@@ -39,6 +41,7 @@ class UnitsListScreen extends StatelessWidget {
         area: "150 sq. ft",
         createdDate: "20/01/2024",
         updatedDate: "20/01/2024",
+        imagePath: 'assets/images/3.png',
       ),
     ];
 

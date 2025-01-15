@@ -3,11 +3,6 @@ import 'package:private_property_management/App%20Screen/Maintanance/Maintenance
 import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/PriorityStatus.dart';
 import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/ProgressStatusFilter.dart';
 import 'package:private_property_management/App%20Screen/Maintanance/Maintenance%20Filters/RequestedDateRangeFilter.dart';
-import 'package:private_property_management/App%20Screen/Tanents/PreorityStatus.dart';
-import 'package:private_property_management/Filters/Properties/PropertiesType.dart';
-import 'package:private_property_management/Filters/Properties/location_filter.dart';
-import 'package:private_property_management/Filters/Properties/number_of_units_filter.dart';
-import 'package:private_property_management/Filters/Properties/status_filter.dart';
 import 'MaintenanceDetailsScreens.dart';
 
 class MaintenanceScreen extends StatefulWidget {

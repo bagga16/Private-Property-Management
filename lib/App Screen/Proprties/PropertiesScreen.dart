@@ -31,6 +31,8 @@ class _PropertiesscreenState extends State<Propertiesscreen> {
       createdDate: "20/01/2024",
       updatedDate: "20/01/2024",
       status: "Active",
+      imagePath: 'assets/images/propertyImage.png',
+      rent: "\$222/",
     ),
     PropertyModel(
       title: "Sky Dandelions",
@@ -43,6 +45,8 @@ class _PropertiesscreenState extends State<Propertiesscreen> {
       createdDate: "20/01/2024",
       updatedDate: "20/01/2024",
       status: "In-Active",
+      imagePath: 'assets/images/propertyImage.png',
+      rent: "\$205/",
     ),
     PropertyModel(
       title: "Sky Dandelions",
@@ -55,6 +59,8 @@ class _PropertiesscreenState extends State<Propertiesscreen> {
       createdDate: "20/01/2024",
       updatedDate: "20/01/2024",
       status: "In-Active",
+      imagePath: 'assets/images/propertyImage.png',
+      rent: "\$235/",
     ),
   ];
 

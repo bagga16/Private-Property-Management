@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:private_property_management/Models/UnitModel.dart';
 
@@ -11,6 +12,13 @@ class UnitDetailsScreen extends StatefulWidget {
 }
 
 class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
+  int _currentImageIndex = 0;
+  final List<String> sampleImages = [
+    'assets/images/1.png',
+    'assets/images/2.png',
+    'assets/images/3.png',
+  ]; // Later replace with images from Firebase
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +29,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Header Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -43,25 +52,69 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const AddPropertyScreen(),
-                      //   ),
-                      // );
+                      // Handle edit action
                     },
                     child: const CircleAvatar(
                       radius: 22,
                       backgroundColor: Color.fromRGBO(37, 43, 92, 1),
-                      child: Image(
-                          image: AssetImage('assets/icons/edditProfile.png')),
+                      child: Icon(Icons.edit, color: Colors.white),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 35,
+              const SizedBox(height: 20),
+
+              // Carousel Slider
+              CarouselSlider(
+                items: sampleImages
+                    .map(
+                      (image) => ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          image,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
+                    )
+                    .toList(),
+                options: CarouselOptions(
+                  autoPlay: true,
+                  height: 200,
+                  viewportFraction: 1.0,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _currentImageIndex = index;
+                    });
+                  },
+                ),
               ),
+
+              // Carousel Indicator
+              // Carousel Indicator
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: sampleImages.asMap().entries.map((entry) {
+                  return GestureDetector(
+                    onTap: () =>
+                        {}, // Optional: Tap functionality for indicators
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      width: _currentImageIndex == entry.key ? 8.0 : 4.0,
+                      height: _currentImageIndex == entry.key ? 8.0 : 4.0,
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 4.0),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color.fromRGBO(139, 200, 63, 1)),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const SizedBox(height: 4),
+
+              // Unit Title
               Text(
                 widget.unit.name,
                 style: const TextStyle(
@@ -72,6 +125,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
               ),
               const SizedBox(height: 16),
 
+              // Description Section
               const Text(
                 "Description",
                 style: TextStyle(
@@ -90,7 +144,8 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-// Property Info Grid
+
+              // Property Info Grid
               Container(
                 child: Column(
                   children: [
@@ -103,7 +158,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                     const SizedBox(height: 29),
                     _buildTwoColumnRow(
                       title1: "Unit Type",
-                      value1: "Office", //property.units.toString(),
+                      value1: "Office",
                       title2: "Status",
                       value2: widget.unit.status,
                     ),
@@ -163,7 +218,6 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 24),
             ],
           ),
