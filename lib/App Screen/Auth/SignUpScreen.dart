@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:private_property_management/Home.dart';
-import 'package:private_property_management/App%20Screen/Auth/SignUpScreen.dart';
+import 'package:private_property_management/App%20Screen/Auth/Login.dart';
 import 'package:private_property_management/Widgest/CustomTextField.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -15,10 +16,7 @@ class LoginPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: const Text(
-          "Alert!",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
-        ),
+        title: const Text("Alert!"),
         content: Text(message),
         actions: [
           TextButton(
@@ -28,19 +26,24 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Future<void> _login(BuildContext context) async {
+  Future<void> _signUp(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final auth = FirebaseAuth.instance;
+      final firestore = FirebaseFirestore.instance;
+
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
+      await firestore.collection('users').doc(userCredential.user!.uid).set({
+        'email': _emailController.text.trim(),
+      });
+
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
     } catch (e) {
-      _showAlertDialog(context, "Login failed. Please check your credentials.");
+      _showAlertDialog(context, e.toString());
     }
   }
 
@@ -81,7 +84,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: "Sign In",
+                        text: "Sign Up",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w800,
@@ -100,14 +103,13 @@ class LoginPage extends StatelessWidget {
                     controller: _passwordController,
                     isPassword: true),
                 const SizedBox(height: 81),
-                // Login Button
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 95,
                   height: 63,
                   child: ElevatedButton(
                     onPressed: () {
                       if (_validateInputs(context)) {
-                        _login(context);
+                        _signUp(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -116,19 +118,16 @@ class LoginPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text("Login",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18)),
+                    child: const Text("Sign Up",
+                        style: TextStyle(color: Colors.white, fontSize: 18)),
                   ),
                 ),
                 const SizedBox(height: 25),
                 InkWell(
                   onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen())),
+                      MaterialPageRoute(builder: (context) => LoginPage())),
                   child: const Text(
-                    "Don't have an account? Sign Up",
+                    "Already have an account? Sign In",
                     style: TextStyle(
                       fontSize: 16,
                       color: const Color.fromRGBO(139, 200, 63, 1),

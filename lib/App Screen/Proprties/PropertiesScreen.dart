@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:private_property_management/Filters/Properties/PropertiesType.dart';
 import 'package:private_property_management/Filters/Properties/location_filter.dart';
@@ -71,6 +73,26 @@ class _PropertiesscreenState extends State<Propertiesscreen> {
     "Location",
     "Status"
   ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final DatabaseReference _realtimeDB =
+      FirebaseDatabase.instance.ref().child('property_images');
+
+  Future<List<PropertyModel>> _fetchProperties() async {
+    final snapshot = await _firestore.collection('All Properties').get();
+    List<PropertyModel> properties = snapshot.docs
+        .map((doc) => PropertyModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
+
+    for (var property in properties) {
+      final imageSnapshot = await _realtimeDB.child(property.id).once();
+      if (imageSnapshot.snapshot.value != null) {
+        Map<String, dynamic> imagesMap =
+            Map<String, dynamic>.from(imageSnapshot.snapshot.value as Map);
+        property.imagePath = imagesMap.values.first['image'];
+      }
+    }
+    return properties;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,24 +239,49 @@ class _PropertiesscreenState extends State<Propertiesscreen> {
               const SizedBox(height: 16),
               // Properties List
               Expanded(
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: properties.length,
-                  itemBuilder: (context, index) {
-                    return PropertyCard(
-                      property: properties[index],
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PropertyDetailsScreen(
-                                    property: properties[index],
-                                  )),
+                child: FutureBuilder<List<PropertyModel>>(
+                  future: _fetchProperties(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final properties = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: properties.length,
+                      itemBuilder: (context, index) {
+                        return PropertyCard(
+                          property: properties[index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PropertyDetailsScreen(
+                                      property: properties[index])),
+                            );
+                          },
                         );
                       },
                     );
                   },
                 ),
+                // ListView.builder(
+                //   physics: const BouncingScrollPhysics(),
+                //   itemCount: properties.length,
+                //   itemBuilder: (context, index) {
+                //     return PropertyCard(
+                //       property: properties[index],
+                //       onTap: () {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => PropertyDetailsScreen(
+                //                     property: properties[index],
+                //                   )),
+                //         );
+                //       },
+                //     );
+                //   },
+                // ),
               ),
             ],
           ),

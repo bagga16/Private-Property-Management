@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import 'package:private_property_management/Widgest/CustomTextField.dart';
+import 'package:uuid/uuid.dart';
 
 class AddPropertyScreen extends StatefulWidget {
   const AddPropertyScreen({super.key});
@@ -13,16 +16,104 @@ class AddPropertyScreen extends StatefulWidget {
 
 class _AddPropertyScreenState extends State<AddPropertyScreen> {
   final List<File> _selectedImages = [];
+  final TextEditingController _propertyIdController = TextEditingController();
+  final TextEditingController _propertyNameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
+  final TextEditingController _zipController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
+  final TextEditingController _propertyTypeController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  final DatabaseReference _realtimeDB =
+      FirebaseDatabase.instance.ref().child('property_images');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Uuid uuid = const Uuid();
 
   Future<void> _pickImages() async {
-    final ImagePicker picker = ImagePicker();
+    final picker = ImagePicker();
     final List<XFile>? pickedFiles = await picker.pickMultiImage();
-
     if (pickedFiles != null) {
       setState(() {
-        _selectedImages.addAll(pickedFiles.map((file) => File(file.path)));
+        _selectedImages
+            .addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)));
       });
     }
+  }
+
+  Future<void> _addPropertyToFirebase() async {
+    //  Validate fields before proceeding
+    if (_propertyNameController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _cityController.text.isEmpty ||
+        _stateController.text.isEmpty ||
+        _zipController.text.isEmpty ||
+        _countryController.text.isEmpty ||
+        _propertyTypeController.text.isEmpty ||
+        _statusController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        _selectedImages.isEmpty) {
+      _showAlertDialog("All fields must be filled.");
+      return;
+    }
+
+    try {
+      //  Generate a unique property ID
+      final String propertyId = uuid.v4();
+      List<String> imageUrls = [];
+
+      //  Upload images to Firebase Realtime Database as Base64
+      for (File image in _selectedImages) {
+        final imageBytes = await image.readAsBytes();
+        final imageBase64 = base64Encode(imageBytes);
+        await _realtimeDB.child(propertyId).push().set({'image': imageBase64});
+        imageUrls.add(imageBase64);
+      }
+
+      //  Prepare property data map for Firestore
+      Map<String, dynamic> propertyData = {
+        'propertyId': _propertyIdController.text.trim(),
+        'title': _propertyNameController.text.trim(),
+        'id': propertyId,
+        'address':
+            "${_addressController.text.trim()}, ${_cityController.text.trim()}, ${_stateController.text.trim()}, ${_zipController.text.trim()}, ${_countryController.text.trim()}",
+        'type': _propertyTypeController.text.trim(),
+        'units': int.tryParse(_zipController.text) ?? 0,
+        'description': _descriptionController.text.trim(),
+        'createdDate': DateTime.now().toIso8601String(),
+        'updatedDate': DateTime.now().toIso8601String(),
+        'status': _statusController.text.trim(),
+        'imageUrls': imageUrls,
+        'rent': "\$200",
+      };
+
+      //  Save property data to Firestore
+      await _firestore
+          .collection('All Properties')
+          .doc(propertyId)
+          .set(propertyData);
+
+      _showAlertDialog("Property added successfully!");
+      Navigator.pop(context);
+    } catch (e) {
+      _showAlertDialog("Error adding property: ${e.toString()}");
+    }
+  }
+
+  void _showAlertDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Alert"),
+        content: Text(message),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text("OK"))
+        ],
+      ),
+    );
   }
 
   @override
@@ -114,40 +205,68 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   ),
                 ),
               const SizedBox(height: 16),
-              const CustomTextField(
-                  hintText: "Property ID", height: 48, borderRadius: 10),
+              CustomTextField(
+                  controller: _propertyIdController,
+                  hintText: "Property ID",
+                  height: 48,
+                  borderRadius: 10),
               const SizedBox(height: 10),
-              const CustomTextField(
-                  height: 48, borderRadius: 10, hintText: "Property Name"),
+              CustomTextField(
+                  controller: _propertyNameController,
+                  height: 48,
+                  borderRadius: 10,
+                  hintText: "Property Name"),
               const SizedBox(height: 10),
-              const CustomTextField(
-                  height: 48, borderRadius: 10, hintText: "Address Line"),
+              CustomTextField(
+                  controller: _addressController,
+                  height: 48,
+                  borderRadius: 10,
+                  hintText: "Address Line"),
               const SizedBox(height: 10),
-              const Row(
+              Row(
                 children: [
                   Expanded(
-                      child: CustomTextField(height: 48, hintText: "City")),
-                  SizedBox(width: 10),
+                      child: CustomTextField(
+                          controller: _cityController,
+                          height: 48,
+                          hintText: "City")),
+                  const SizedBox(width: 10),
                   Expanded(
-                      child: CustomTextField(height: 48, hintText: "State")),
+                      child: CustomTextField(
+                          controller: _stateController,
+                          height: 48,
+                          hintText: "State")),
                 ],
               ),
               const SizedBox(height: 10),
-              const Row(
+              Row(
                 children: [
                   Expanded(
-                      child: CustomTextField(height: 48, hintText: "Zip Code")),
-                  SizedBox(width: 10),
+                      child: CustomTextField(
+                          controller: _zipController,
+                          height: 48,
+                          hintText: "Zip Code")),
+                  const SizedBox(width: 10),
                   Expanded(
-                      child: CustomTextField(height: 48, hintText: "Country")),
+                      child: CustomTextField(
+                          controller: _countryController,
+                          height: 48,
+                          hintText: "Country")),
                 ],
               ),
               const SizedBox(height: 10),
-              const CustomTextField(height: 48, hintText: "Property Type"),
+              CustomTextField(
+                  controller: _propertyTypeController,
+                  height: 48,
+                  hintText: "Property Type"),
               const SizedBox(height: 10),
-              const CustomTextField(height: 48, hintText: "Status"),
+              CustomTextField(
+                  controller: _statusController,
+                  height: 48,
+                  hintText: "Status"),
               const SizedBox(height: 10),
-              const CustomTextField(
+              CustomTextField(
+                controller: _descriptionController,
                 height: 156,
                 hintText: "Description",
                 focusBorderColor: Colors.transparent,
@@ -159,7 +278,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle Add button functionality
+                      _addPropertyToFirebase();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(139, 200, 63, 1),

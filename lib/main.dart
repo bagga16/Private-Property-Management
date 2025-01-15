@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:private_property_management/App%20Screen/Lease%20Details/LeaseDetails.dart';
-import 'package:private_property_management/App%20Screen/Payments/PaymentsScreen.dart';
-import 'package:private_property_management/App%20Screen/Proprties/Units/UnitsListScreen.dart';
+import 'package:private_property_management/App%20Screen/Auth/Login.dart';
 import 'package:private_property_management/Home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -13,7 +15,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: UnitsListScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          } else {
+            return LoginPage();
+          }
+        },
+      ),
+    );
   }
 }
