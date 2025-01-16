@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Screens list for navigation
   final List<Widget> screens = [
     const DashboardScreen(),
-    const Propertiesscreen(),
+    Propertiesscreen(),
     TenantsScreen(),
     const Settingsscreen(),
   ];

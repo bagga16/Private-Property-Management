@@ -77,8 +77,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
         'propertyId': _propertyIdController.text.trim(),
         'title': _propertyNameController.text.trim(),
         'id': propertyId,
-        'address':
-            "${_addressController.text.trim()}, ${_cityController.text.trim()}, ${_stateController.text.trim()}, ${_zipController.text.trim()}, ${_countryController.text.trim()}",
+        'address': _addressController.text.trim(),
+        'city': _cityController.text.trim(),
+        'state': _stateController.text.trim(),
+        'zip': _zipController.text.trim(),
+        'country': _countryController.text.trim(),
         'type': _propertyTypeController.text.trim(),
         'units': int.tryParse(_zipController.text) ?? 0,
         'description': _descriptionController.text.trim(),
@@ -86,7 +89,6 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
         'updatedDate': DateTime.now().toIso8601String(),
         'status': _statusController.text.trim(),
         'imageUrls': imageUrls,
-        'rent': "\$200",
       };
 
       //  Save property data to Firestore

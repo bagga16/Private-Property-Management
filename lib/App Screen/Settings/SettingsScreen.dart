@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:private_property_management/App%20Screen/Auth/Login.dart';
 import 'package:private_property_management/Common%20Components/CustomeButton.dart';
+import 'package:private_property_management/Controllers/AuthController.dart';
 import 'package:private_property_management/Home.dart';
 
 class Settingsscreen extends StatefulWidget {
@@ -17,6 +20,8 @@ class _SettingsscreenState extends State<Settingsscreen> {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
+
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +205,8 @@ class _SettingsscreenState extends State<Settingsscreen> {
                   // Log Out Button
                   GestureDetector(
                     onTap: () {
-                      _logout(context);
+                      authController.logout();
+                      // _logout(context);
                       // Handle log out action
                     },
                     child: Container(
