@@ -200,11 +200,14 @@ class SignUpScreen extends StatelessWidget {
                 )),
                 const SizedBox(height: 90),
                 CustomTextField(
-                    hintText: "Enter Email", controller: emailController),
-                const SizedBox(height: 16),
+                    hintText: "Enter Email",
+                    controller: authController.sEmailController),
+                SizedBox(
+                  height: 16,
+                ),
                 CustomTextField(
                     hintText: "Password",
-                    controller: passwordController,
+                    controller: authController.sPasswordController,
                     isPassword: true),
                 const SizedBox(height: 81),
                 SizedBox(
@@ -212,10 +215,7 @@ class SignUpScreen extends StatelessWidget {
                   height: 63,
                   child: ElevatedButton(
                     onPressed: () {
-                      authController.signUp(
-                        emailController.text.trim(),
-                        passwordController.text.trim(),
-                      );
+                      authController.signUp();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(139, 200, 63, 1),

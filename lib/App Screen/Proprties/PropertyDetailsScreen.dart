@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:private_property_management/App%20Screen/Proprties/Units/UnitsListScreen.dart';
 import 'package:private_property_management/Models/PropertyModel.dart';
 import 'package:private_property_management/Widgest/PaymentCard.dart';
 
@@ -6,6 +9,14 @@ class PropertyDetailsScreen extends StatelessWidget {
   final PropertyModel property;
 
   const PropertyDetailsScreen({super.key, required this.property});
+  String formatDate(String date) {
+    final dateTime = DateTime.parse(date);
+    return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
+  }
+
+  String formatPropertyId(String id) {
+    return id.substring(0, 8);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +49,7 @@ class PropertyDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => const AddPropertyScreen(),
-                      //   ),
-                      // );
-                    },
+                    onTap: () {},
                     child: const CircleAvatar(
                       radius: 22,
                       backgroundColor: Color.fromRGBO(37, 43, 92, 1),
@@ -58,23 +62,23 @@ class PropertyDetailsScreen extends StatelessWidget {
               const SizedBox(
                 height: 45,
               ),
-              const Text(
-                "Entire Bromo Mountain View Cabin in Surabaya",
-                style: TextStyle(
+              Text(
+                property.title,
+                style: const TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(37, 43, 92, 1),
                 ),
               ),
               const SizedBox(height: 8),
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.location_on,
+                  const Icon(Icons.location_on,
                       size: 17, color: Color.fromRGBO(139, 200, 63, 1)),
-                  SizedBox(width: 2),
+                  const SizedBox(width: 2),
                   Text(
-                    "Street, City, State, Zip Code, Country",
-                    style: TextStyle(
+                    property.address,
+                    style: const TextStyle(
                       fontSize: 13.5,
                       fontWeight: FontWeight.w400,
                       color: Color.fromRGBO(83, 88, 122, 1),
@@ -92,9 +96,9 @@ class PropertyDetailsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "This cabin comes with Smart Home System and beautiful viking style. You can see sunrise in the morning with City View from full Glass Window. This unit is surrounded by business district of West Surabaya that offers you the city life as well as wide range of culinary.\nThis apartment equipped with Washing Machine, Electric Stove, Microwave, Refrigerator, Cutlery.",
-                style: TextStyle(
+              Text(
+                property.description,
+                style: const TextStyle(
                   fontSize: 13.8,
                   fontWeight: FontWeight.w400,
                   color: Color.fromRGBO(115, 115, 115, 1),
@@ -107,7 +111,7 @@ class PropertyDetailsScreen extends StatelessWidget {
                   children: [
                     _buildTwoColumnRow(
                       title1: "Property ID",
-                      value1: property.id,
+                      value1: formatPropertyId(property.id),
                       title2: "Property Type",
                       value2: property.type,
                     ),
@@ -115,6 +119,14 @@ class PropertyDetailsScreen extends StatelessWidget {
                     _buildTwoColumnRow(
                       title1: "No. of Units",
                       value1: property.units.toString(),
+                      trailingIcon1: const Icon(
+                        Icons.upload_file_outlined,
+                        size: 18,
+                        color: Color.fromRGBO(139, 200, 63, 1),
+                      ),
+                      onIconTap1: () {
+                        Get.to(() => UnitsListScreen());
+                      },
                       title2: "Status",
                       value2: property.status,
                     ),
@@ -132,7 +144,7 @@ class PropertyDetailsScreen extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: property.createdDate,
+                                text: formatDate(property.createdDate),
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
@@ -152,7 +164,7 @@ class PropertyDetailsScreen extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: property.updatedDate,
+                                text: formatDate(property.updatedDate),
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w400,
@@ -215,12 +227,15 @@ class PropertyDetailsScreen extends StatelessWidget {
     required String value1,
     required String title2,
     required String value2,
+    VoidCallback? onIconTap1, // Optional icon tap for first column
+    Widget? trailingIcon1, // Optional trailing icon for first column
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: _buildInfoItem(title1, value1),
+          child: _buildInfoItem(title1, value1,
+              trailingIcon: trailingIcon1, onIconTap: onIconTap1),
         ),
         Expanded(
           child: _buildInfoItem(title2, value2),
@@ -229,8 +244,12 @@ class PropertyDetailsScreen extends StatelessWidget {
     );
   }
 
-  // Single info item
-  Widget _buildInfoItem(String title, String value) {
+  Widget _buildInfoItem(
+    String title,
+    String value, {
+    Widget? trailingIcon, // Optional trailing icon
+    VoidCallback? onIconTap, // Optional callback for icon tap
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -251,13 +270,26 @@ class PropertyDetailsScreen extends StatelessWidget {
         const SizedBox(height: 6),
         Padding(
           padding: const EdgeInsets.only(left: 28),
-          child: Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Color.fromRGBO(83, 88, 122, 1),
-            ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Color.fromRGBO(83, 88, 122, 1),
+                ),
+              ),
+              if (trailingIcon != null) ...[
+                const SizedBox(width: 20), // Ensure 20px space
+                GestureDetector(
+                  onTap: onIconTap,
+                  child: trailingIcon,
+                ),
+              ],
+            ],
           ),
         ),
       ],

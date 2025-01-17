@@ -41,12 +41,7 @@ class _SettingsscreenState extends State<Settingsscreen> {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(),
-                          ),
-                        ),
+                        onTap: () => Get.to(() => HomeScreen()),
                         child: const CircleAvatar(
                           radius: 20,
                           backgroundColor: Color.fromRGBO(245, 244, 248, 1),
