@@ -90,6 +90,12 @@ class PropertyController extends GetxController {
     fetchProperties();
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    fetchProperties();
+  }
+
   Future<void> fetchProperties() async {
     try {
       QuerySnapshot querySnapshot =

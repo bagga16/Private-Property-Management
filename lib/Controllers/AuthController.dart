@@ -55,11 +55,16 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:private_property_management/App%20Screen/Auth/Login.dart';
+import 'package:private_property_management/Controllers/DashBoardController.dart';
+import 'package:private_property_management/Controllers/SettingsController.dart';
 import 'package:private_property_management/Home.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  /// Getter for the current user's ID
+  String? get userId => _auth.currentUser?.uid;
 
   final Rxn<User> _firebaseUser = Rxn<User>();
   User? get user => _firebaseUser.value;
@@ -74,6 +79,24 @@ class AuthController extends GetxController {
     _firebaseUser.bindStream(_auth.authStateChanges());
   }
 
+  // Future<void> login() async {
+  //   final email = emailController.text.trim();
+  //   final password = passwordController.text.trim();
+
+  //   if (email.isEmpty || password.isEmpty) {
+  //     showSnackbar("Error", "Please fill all fields", isError: true);
+  //     return;
+  //   }
+
+  //   try {
+  //     await _auth.signInWithEmailAndPassword(email: email, password: password);
+  //     clearFields();
+  //     showSnackbar("Success", "Login successful", isError: false);
+  //     Get.offAll(() => const HomeScreen());
+  //   } catch (e) {
+  //     showSnackbar("Login Failed", e.toString(), isError: true);
+  //   }
+  // }
   Future<void> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -85,6 +108,14 @@ class AuthController extends GetxController {
 
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      // Clear and reinitialize controllers to load the new user's data
+      Get.delete<DashboardController>();
+      Get.put(DashboardController()); // Initialize with fresh state
+
+      Get.delete<SettingsController>();
+      Get.put(SettingsController()); // Initialize with fresh state
+
       clearFields();
       showSnackbar("Success", "Login successful", isError: false);
       Get.offAll(() => const HomeScreen());
@@ -121,9 +152,22 @@ class AuthController extends GetxController {
     }
   }
 
+  // void logout() async {
+  //   await _auth.signOut();
+  //   clearFields();
+  //   Get.offAll(() => LoginPage());
+  // }
   void logout() async {
     await _auth.signOut();
-    clearFields();
+
+    // Clear all controllers that hold user-specific data
+    Get.delete<DashboardController>(); // Replace with actual controllers
+    Get.delete<SettingsController>(); // Replace with actual controllers
+
+    // Clear user information in AuthController
+    _firebaseUser.value = null;
+
+    // Navigate to login page
     Get.offAll(() => LoginPage());
   }
 

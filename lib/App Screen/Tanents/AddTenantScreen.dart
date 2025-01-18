@@ -1,125 +1,17 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:private_property_management/Controllers/AddTenantController.dart';
 import 'package:private_property_management/Widgest/CustomTextField.dart';
 
 class AddTanentsScreen extends StatefulWidget {
-  const AddTanentsScreen({super.key});
+  AddTanentsScreen({super.key});
 
   @override
   State<AddTanentsScreen> createState() => _AddTanentsScreenState();
 }
 
 class _AddTanentsScreenState extends State<AddTanentsScreen> {
-  // Controllers for TextFields
-  final tenantIdController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final leaseStartController = TextEditingController();
-  final leaseEndController = TextEditingController();
-  final rentController = TextEditingController();
-  final unitIdController = TextEditingController();
-  final securityDepositController = TextEditingController();
-
-  // Drop-down selected values
-  String? selectedStatus;
-  String? selectedPaymentStatus;
-
-  // File selection
-  File? selectedFile;
-  final picker = ImagePicker();
-
-  // Firebase instances
-  final databaseRef = FirebaseDatabase.instance.ref();
-  final firestoreRef = FirebaseFirestore.instance;
-
-  // Function to pick a file
-  Future<void> pickFile() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        selectedFile = File(pickedFile.path);
-      });
-    } else {
-      Get.snackbar('No File Selected', 'Please select a lease document.');
-    }
-  }
-
-  // Function to add tenant
-  Future<void> addTenant() async {
-    if (tenantIdController.text.isEmpty ||
-        firstNameController.text.isEmpty ||
-        emailController.text.isEmpty ||
-        phoneController.text.isEmpty ||
-        rentController.text.isEmpty ||
-        unitIdController.text.isEmpty) {
-      Get.snackbar('Error', 'Please fill all required fields.');
-      return;
-    }
-
-    try {
-      // Upload file to Realtime Database
-      String? fileUrl;
-      if (selectedFile != null) {
-        final fileRef = databaseRef
-            .child('tenants/${tenantIdController.text}/lease_document');
-        await fileRef.set(selectedFile!.readAsBytesSync());
-        fileUrl = fileRef.path; // Path where the file is stored
-      }
-
-      // Prepare tenant data
-      final tenantData = {
-        'tenantId': tenantIdController.text,
-        'name': '${firstNameController.text} ${lastNameController.text}',
-        'email': emailController.text,
-        'phone': phoneController.text,
-        'leaseStart': leaseStartController.text,
-        'leaseEnd': leaseEndController.text,
-        'rent': rentController.text,
-        'unitId': unitIdController.text,
-        'status': selectedStatus ?? '',
-        'paymentStatus': selectedPaymentStatus ?? '',
-        'securityDeposit': securityDepositController.text,
-        'leaseDocumentUrl': fileUrl ?? '',
-        'createdDate': DateTime.now().toIso8601String(),
-        'updatedDate': DateTime.now().toIso8601String(),
-      };
-
-      // Add data to Firestore
-      await firestoreRef.collection('All Tenants').add(tenantData);
-
-      // Success message
-      Get.snackbar('Success', 'Tenant added successfully.');
-      clearForm();
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to add tenant: $e');
-    }
-  }
-
-  // Function to clear form
-  void clearForm() {
-    tenantIdController.clear();
-    firstNameController.clear();
-    lastNameController.clear();
-    emailController.clear();
-    phoneController.clear();
-    leaseStartController.clear();
-    leaseEndController.clear();
-    rentController.clear();
-    unitIdController.clear();
-    securityDepositController.clear();
-    selectedStatus = null;
-    selectedPaymentStatus = null;
-    selectedFile = null;
-    setState(() {});
-  }
+  final AddTenantController controller = Get.put(AddTenantController());
 
   @override
   Widget build(BuildContext context) {
@@ -157,31 +49,31 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                 ),
                 const SizedBox(height: 16),
                 CustomTextField(
-                    controller: tenantIdController,
+                    controller: controller.tenantIdController,
                     hintText: "Tenant ID",
                     height: 48,
                     borderRadius: 10),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: firstNameController,
+                    controller: controller.firstNameController,
                     hintText: "First Name",
                     height: 48,
                     borderRadius: 10),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: lastNameController,
+                    controller: controller.lastNameController,
                     hintText: "Last Name",
                     height: 48,
                     borderRadius: 10),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: emailController,
+                    controller: controller.emailController,
                     hintText: "Email Address",
                     height: 48,
                     borderRadius: 10),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: phoneController,
+                    controller: controller.phoneController,
                     hintText: "Phone Number",
                     keyboardType: TextInputType.phone,
                     height: 48,
@@ -191,14 +83,14 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                   children: [
                     Expanded(
                         child: CustomTextField(
-                            controller: leaseStartController,
+                            controller: controller.leaseStartController,
                             height: 48,
                             keyboardType: TextInputType.datetime,
                             hintText: "Lease Start Date")),
                     const SizedBox(width: 10),
                     Expanded(
                         child: CustomTextField(
-                            controller: leaseEndController,
+                            controller: controller.leaseEndController,
                             height: 48,
                             keyboardType: TextInputType.datetime,
                             hintText: "Lease End Date")),
@@ -206,23 +98,25 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: rentController,
+                    controller: controller.rentController,
                     height: 48,
                     keyboardType: TextInputType.phone,
                     hintText: "Monthly Rent"),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: unitIdController,
+                    controller: controller.unitIdController,
                     height: 48,
                     hintText: "Unit ID"),
                 const SizedBox(height: 10),
                 Container(
                   height: 48,
+                  width: double.infinity,
                   child: DropdownButtonFormField<String>(
-                    value: selectedStatus,
-                    onChanged: (value) => setState(() {
-                      selectedStatus = value;
-                    }),
+                    value: controller.selectedStatus.value.isEmpty
+                        ? null
+                        : controller.selectedStatus.value,
+                    onChanged: (value) =>
+                        controller.selectedStatus.value = value!,
                     decoration: InputDecoration(
                       fillColor: const Color.fromRGBO(245, 244, 248, 1),
                       filled: true,
@@ -237,6 +131,10 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                           color: Color.fromRGBO(37, 43, 92, 1),
                           fontWeight: FontWeight.w500),
                     ),
+                    style: const TextStyle(
+                        fontSize: 13,
+                        color: Color.fromRGBO(37, 43, 92, 1),
+                        fontWeight: FontWeight.w500),
                     items: const [
                       DropdownMenuItem(value: "Active", child: Text("Active")),
                       DropdownMenuItem(
@@ -246,17 +144,18 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
-                    controller: securityDepositController,
+                    controller: controller.securityDepositController,
                     height: 48,
                     hintText: "Security Deposit"),
                 const SizedBox(height: 10),
                 Container(
                   height: 48,
                   child: DropdownButtonFormField<String>(
-                    value: selectedPaymentStatus,
-                    onChanged: (value) => setState(() {
-                      selectedPaymentStatus = value;
-                    }),
+                    value: controller.paymentStatus.value.isEmpty
+                        ? null
+                        : controller.paymentStatus.value,
+                    onChanged: (value) =>
+                        controller.paymentStatus.value = value!,
                     decoration: InputDecoration(
                       fillColor: const Color.fromRGBO(245, 244, 248, 1),
                       filled: true,
@@ -271,6 +170,10 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                           color: Color.fromRGBO(37, 43, 92, 1),
                           fontWeight: FontWeight.w500),
                     ),
+                    style: const TextStyle(
+                        fontSize: 13,
+                        color: Color.fromRGBO(37, 43, 92, 1),
+                        fontWeight: FontWeight.w500),
                     items: const [
                       DropdownMenuItem(value: "Paid", child: Text("Paid")),
                       DropdownMenuItem(
@@ -280,7 +183,7 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: pickFile,
+                  onTap: controller.pickFile,
                   child: Container(
                     width: double.infinity,
                     height: 48,
@@ -289,22 +192,22 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Image.asset('assets/icons/document.png'),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          selectedFile != null
-                              ? "File Selected"
-                              : "Lease Document",
-                          style: const TextStyle(
-                              fontSize: 13,
-                              color: Color.fromRGBO(37, 43, 92, 1),
-                              fontWeight: FontWeight.w600),
-                        )
+                        const SizedBox(width: 10),
+                        const Icon(Icons.attach_file),
+                        const SizedBox(width: 10),
+                        Obx(() {
+                          return Text(
+                            controller.selectedFile.value != null
+                                ? controller.selectedFile.value!.path
+                                    .split('/')
+                                    .last
+                                : "Select Lease Document",
+                            style: const TextStyle(
+                                fontSize: 13,
+                                color: Color.fromRGBO(37, 43, 92, 1),
+                                fontWeight: FontWeight.w600),
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -315,7 +218,7 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                     width: MediaQuery.of(context).size.width - 96,
                     height: 60,
                     child: ElevatedButton(
-                      onPressed: addTenant,
+                      onPressed: controller.addTenant,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(139, 200, 63, 1),
                         shape: RoundedRectangleBorder(
@@ -338,7 +241,6 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
     );
   }
 }
-
 
 
 // import 'dart:io';
@@ -586,6 +488,10 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
 //                           color: Color.fromRGBO(37, 43, 92, 1),
 //                           fontWeight: FontWeight.w500),
 //                     ),
+//                     style: const TextStyle(
+//                         fontSize: 13,
+//                         color: Color.fromRGBO(37, 43, 92, 1),
+//                         fontWeight: FontWeight.w500),
 //                     items: const [
 //                       DropdownMenuItem(value: "Active", child: Text("Active")),
 //                       DropdownMenuItem(
@@ -599,6 +505,39 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
 //                     height: 48,
 //                     hintText: "Security Deposit"),
 //                 const SizedBox(height: 10),
+                // Container(
+                //   height: 48,
+                //   child: DropdownButtonFormField<String>(
+                //     value: selectedPaymentStatus,
+                //     onChanged: (value) => setState(() {
+                //       selectedPaymentStatus = value;
+                //     }),
+                //     decoration: InputDecoration(
+                //       fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                //       filled: true,
+                //       border: OutlineInputBorder(
+                //         borderSide: BorderSide.none,
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //       hintText: "Payment Status",
+                //       hintStyle: const TextStyle(
+                //           height: 2.5,
+                //           fontSize: 13,
+                //           color: Color.fromRGBO(37, 43, 92, 1),
+                //           fontWeight: FontWeight.w500),
+                //     ),
+                //     style: const TextStyle(
+                //         fontSize: 13,
+                //         color: Color.fromRGBO(37, 43, 92, 1),
+                //         fontWeight: FontWeight.w500),
+                //     items: const [
+                //       DropdownMenuItem(value: "Paid", child: Text("Paid")),
+                //       DropdownMenuItem(
+                //           value: "Over Due", child: Text("Over Due")),
+                //     ],
+                //   ),
+                // ),
+                // const SizedBox(height: 10),
 //                 GestureDetector(
 //                   onTap: pickFile,
 //                   child: Container(

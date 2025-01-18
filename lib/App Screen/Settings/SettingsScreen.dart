@@ -1,243 +1,295 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:private_property_management/App%20Screen/Auth/Login.dart';
 import 'package:private_property_management/Common%20Components/CustomeButton.dart';
+import 'package:private_property_management/Controllers/SettingsController.dart';
 import 'package:private_property_management/Controllers/AuthController.dart';
 import 'package:private_property_management/Home.dart';
 
-class Settingsscreen extends StatefulWidget {
-  const Settingsscreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  final SettingsController controller = Get.put(SettingsController());
+  final AuthController authController = Get.find<AuthController>();
 
-  @override
-  State<Settingsscreen> createState() => _SettingsscreenState();
-}
-
-class _SettingsscreenState extends State<Settingsscreen> {
-  void _logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+  void showEditPopup(String title, String field, String? initialValue) {
+    final textController = TextEditingController(text: initialValue);
+    Get.dialog(
+      AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: textController,
+          decoration: const InputDecoration(hintText: "Enter new value"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              final newValue = textController.text.trim();
+              if (newValue.isNotEmpty) {
+                controller.editUserField(field, newValue);
+                Get.back();
+              }
+            },
+            child: const Text("OK"),
+          ),
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Cancel"),
+          ),
+        ],
+      ),
+    );
   }
-
-  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Main Content
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 28, right: 20, top: 10, bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Back Button and Title
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Get.to(() => HomeScreen()),
-                        child: const CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Color.fromRGBO(245, 244, 248, 1),
-                          child: Icon(
-                            Icons.arrow_back_ios_new,
-                            size: 18,
-                            color: Color.fromRGBO(37, 43, 92, 1),
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      const Text(
-                        "Settings  ",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Color.fromRGBO(37, 43, 92, 1),
-                        ),
-                      ),
-                      const Spacer(), // Maintain alignment
-                      const SizedBox(width: 40), // Placeholder for symmetry
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Profile Avatar
-                  const CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Color.fromRGBO(217, 217, 217, 1),
-                      child: Image(
-                          image: AssetImage('assets/images/profile.png'))),
-
-                  const SizedBox(height: 7),
-
-                  // User Name and ID
-                  const Text(
-                    "Qwerty Jonathan",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(37, 43, 92, 1),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "ID: ",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(83, 88, 122, 1),
-                        ),
-                      ),
-                      Text(
-                        "5554112",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Color.fromRGBO(83, 88, 122, 1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 18),
-
-                  // Role and Contact Info Card
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                        left: 18, right: 12, bottom: 18, top: 15),
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(245, 244, 248, 1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              "  Role: ",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color.fromRGBO(83, 88, 122, 1),
-                              ),
-                            ),
-                            const Text(
-                              "Manager",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color: Color.fromRGBO(139, 200, 63, 1),
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                // Handle edit action
-                              },
-                              child: const CircleAvatar(
-                                  radius: 16,
-                                  backgroundColor:
-                                      Color.fromRGBO(37, 43, 92, 1),
-                                  child: Image(
-                                      image: AssetImage(
-                                          'assets/icons/edditProfile.png'))),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.mail,
-                              color: Color.fromRGBO(139, 200, 63, 1),
-                              size: 20,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              "example@gmail.com",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color.fromRGBO(83, 88, 122, 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.phone,
-                              color: Color.fromRGBO(139, 200, 63, 1),
-                              size: 20,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              "+1 321 2552 3321",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color.fromRGBO(83, 88, 122, 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-
-                  // Log Out Button
-                  GestureDetector(
-                    onTap: () {
-                      authController.logout();
-                      // _logout(context);
-                      // Handle log out action
-                    },
-                    child: Container(
-                      width: double.infinity,
+      body: Obx(
+        () => controller.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: Stack(
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 17, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color.fromRGBO(245, 244, 248, 1),
-                        borderRadius: BorderRadius.circular(12),
+                          horizontal: 28, vertical: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Back Button and Title
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Get.to(HomeScreen()),
+                                child: const CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor:
+                                      Color.fromRGBO(245, 244, 248, 1),
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new,
+                                    size: 18,
+                                    color: Color.fromRGBO(37, 43, 92, 1),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              const Text(
+                                "Settings",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromRGBO(37, 43, 92, 1),
+                                ),
+                              ),
+                              const Spacer(),
+                              const SizedBox(width: 40),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+
+                          // Profile Avatar
+                          GestureDetector(
+                            onTap: controller.updateProfilePicture,
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundColor:
+                                  const Color.fromRGBO(217, 217, 217, 1),
+                              backgroundImage: controller
+                                          .userModel.value.profilePic !=
+                                      null
+                                  ? MemoryImage(base64Decode(
+                                      controller.userModel.value.profilePic!))
+                                  : const AssetImage(
+                                          'assets/images/profile.png')
+                                      as ImageProvider,
+                            ),
+                          ),
+
+                          const SizedBox(height: 7),
+
+                          // User Name
+                          GestureDetector(
+                            onTap: () => showEditPopup("Edit Name", "name",
+                                controller.userModel.value.name),
+                            child: Text(
+                              controller.userModel.value.name ?? "N/A",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(37, 43, 92, 1),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+
+                          // User ID
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "ID: ",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromRGBO(83, 88, 122, 1),
+                                ),
+                              ),
+                              Text(
+                                controller.userModel.value.userId != null
+                                    ? controller.userModel.value.userId!
+                                        .substring(0, 7)
+                                    : "84102",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color.fromRGBO(83, 88, 122, 1),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 18),
+
+                          // Role and Contact Info Card
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 18, vertical: 15),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(245, 244, 248, 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Role
+                                GestureDetector(
+                                  onTap: () => showEditPopup("Edit Role",
+                                      "role", controller.userModel.value.role),
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        "  Role: ",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color.fromRGBO(83, 88, 122, 1),
+                                        ),
+                                      ),
+                                      Text(
+                                        controller.userModel.value.role ??
+                                            "N/A",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color:
+                                              Color.fromRGBO(139, 200, 63, 1),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+
+                                // Email
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.mail,
+                                      color: Color.fromRGBO(139, 200, 63, 1),
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      controller.userModel.value.email ?? "N/A",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(83, 88, 122, 1),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+
+                                // Phone
+                                GestureDetector(
+                                  onTap: () => showEditPopup(
+                                      "Edit Phone",
+                                      "phone",
+                                      controller.userModel.value.phone),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.phone,
+                                        color: Color.fromRGBO(139, 200, 63, 1),
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        controller.userModel.value.phone ??
+                                            "N/A",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color.fromRGBO(83, 88, 122, 1),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 18),
+
+                          // Log Out Button
+                          GestureDetector(
+                            onTap: authController.logout,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(vertical: 17),
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(245, 244, 248, 1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Row(
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    "Log Out",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color.fromRGBO(37, 43, 92, 1),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text(
-                        "Log Out",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(37, 43, 92, 1),
+                    ),
+
+                    // Bottom Button
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: CustomButton(
+                          text: "View Buildings",
+                          onPressed: () {
+                            // Your action for View Buildings
+                          },
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: CustomButton(
-                  text: "View Buildings",
-                  onPressed: () {},
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

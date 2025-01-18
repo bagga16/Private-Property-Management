@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:private_property_management/App%20Screen/Tanents/TanentsScreen.dart';
 
 class TenantDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> tenant;
 
   const TenantDetailsScreen({super.key, required this.tenant});
+
+  String getSafeString(dynamic value, [String defaultValue = "N/A"]) {
+    return value?.toString() ??
+        defaultValue; // Return the value or "N/A" if null
+  }
+
+  String formatDate(String date) {
+    final dateTime = DateTime.parse(date);
+    return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +33,7 @@ class TenantDetailsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => Get.to(() => TenantsScreen()),
                       child: const CircleAvatar(
                         radius: 22,
                         backgroundColor: Color.fromRGBO(245, 244, 248, 1),
@@ -55,7 +67,7 @@ class TenantDetailsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      tenant["name"],
+                      getSafeString(tenant["name"]),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -63,29 +75,36 @@ class TenantDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      tenant["status"],
-                      style: const TextStyle(
+                      getSafeString(tenant["status"]),
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(139, 200, 63, 1),
+                        color: tenant["status"] == "Active"
+                            ? const Color.fromRGBO(139, 200, 63, 1)
+                            : const Color.fromRGBO(223, 21, 37, 1),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
 
-                _buildDetailRow(Icons.email, tenant["email"]),
+                const SizedBox(height: 12),
+                _buildDetailColumn(
+                    "Tenant ID", getSafeString(tenant["tenantId"])),
+                const SizedBox(height: 7),
+
+                _buildDetailRow(Icons.email, getSafeString(tenant["email"])),
                 const SizedBox(height: 8),
-                _buildDetailRow(Icons.phone, tenant["phone"]),
+                _buildDetailRow(Icons.phone, getSafeString(tenant["phone"])),
 
                 const SizedBox(height: 22),
 
                 // Created & Updated Date
-                _buildDetailColumn("Created", tenant["createdDate"]),
-                _buildDetailColumn("Updated", tenant["updatedDate"]),
+                _buildDetailColumn("Created",
+                    getSafeString(formatDate(tenant["createdDate"]))),
+                _buildDetailColumn("Updated",
+                    getSafeString(formatDate(tenant["updatedDate"]))),
 
                 const SizedBox(height: 16),
-
                 _buildPaymentCard(
                   name: "John Martin",
                   rent: "\$235/",
@@ -101,15 +120,18 @@ class TenantDetailsScreen extends StatelessWidget {
                 const Text(
                   "Unit Details",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
-                    color: Color.fromRGBO(37, 43, 92, 1),
+                    color: Color.fromRGBO(83, 88, 122, 1),
                   ),
                 ),
-                const SizedBox(height: 8),
-                _buildDetailColumn("Unit ID", "5554112"),
-                _buildDetailColumn("Unit Number", "Apart 101"),
-                _buildDetailColumn("Rent Amount", "\$350.00"),
+                const SizedBox(height: 12),
+                _buildDetailColumn("Unit ID", getSafeString(tenant["unitId"])),
+
+                _buildDetailColumn("Unit Numbere",
+                    "Apart ${getSafeString(tenant["unitNumber"], "0")}"),
+                _buildDetailColumn(
+                    "Rent Amount", "\$${getSafeString(tenant["rent"], "0")}"),
 
                 const SizedBox(height: 16),
 
@@ -117,30 +139,39 @@ class TenantDetailsScreen extends StatelessWidget {
                 const Text(
                   "Lease Details",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
-                    color: Color.fromRGBO(37, 43, 92, 1),
+                    color: Color.fromRGBO(83, 88, 122, 1),
                   ),
                 ),
-                const SizedBox(height: 8),
-                _buildDetailColumn("Security Deposit", "\$350.00"),
-                _buildDetailColumn("Payment Status", "Apart 101"),
-                _buildDetailColumn("Lease Start", "20/01/2024"),
-                _buildDetailColumn("Lease End", "20/01/2024"),
+                const SizedBox(height: 12),
+
+                _buildDetailColumn("Security Deposite",
+                    getSafeString(tenant["securityDeposit"])),
+                _buildDetailColumn(
+                    "Payment Status", getSafeString(tenant["paymentStatus"])),
+                SizedBox(
+                  height: 8,
+                ),
+                _buildDetailColumn("Lease Start",
+                    getSafeString(formatDate(tenant["leaseStart"]))),
+                _buildDetailColumn(
+                    "Lease End", getSafeString(formatDate(tenant["leaseEnd"]))),
 
                 const SizedBox(height: 16),
 
-                // Lease Documents
+                // Lease Documents Section
                 const Text(
                   "Lease Documents",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w700,
-                    color: Color.fromRGBO(37, 43, 92, 1),
+                    color: Color.fromRGBO(83, 88, 122, 1),
                   ),
                 ),
-                _buildDocumentRow("Diet Plan.pdf", "20/01/2024"),
-                _buildDocumentRow("Diet Plan.pdf", "20/01/2024"),
+                const SizedBox(height: 10),
+                _buildDocumentRow("Lease Document 1.pdf", "20/01/2024"),
+                _buildDocumentRow("Lease Document 2.pdf", "20/01/2024"),
                 const SizedBox(height: 48),
               ],
             ),
@@ -161,7 +192,7 @@ class TenantDetailsScreen extends StatelessWidget {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Color.fromRGBO(37, 43, 92, 1),
+            color: Color.fromRGBO(83, 88, 122, 1),
           ),
         ),
       ],
@@ -186,28 +217,10 @@ class TenantDetailsScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: Color.fromRGBO(37, 43, 92, 1),
+              color: Color.fromRGBO(83, 88, 122, 1),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildStatusBadge(String status) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: const Color.fromRGBO(244, 241, 253, 1),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        status,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: Color.fromRGBO(37, 43, 92, 1),
-        ),
       ),
     );
   }
@@ -227,7 +240,7 @@ class TenantDetailsScreen extends StatelessWidget {
                 name,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Color.fromRGBO(37, 43, 92, 1),
+                  color: Color.fromRGBO(83, 88, 122, 1),
                 ),
               ),
             ],

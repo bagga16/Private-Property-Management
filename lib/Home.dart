@@ -17,10 +17,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Screens list for navigation
   final List<Widget> screens = [
-    const DashboardScreen(),
+    DashboardScreen(),
     Propertiesscreen(),
     TenantsScreen(),
-    const Settingsscreen(),
+    SettingsScreen(),
   ];
 
   void onNavTap(int index) {

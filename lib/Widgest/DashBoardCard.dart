@@ -20,7 +20,7 @@ class DashboardCard extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      padding: const EdgeInsets.only(top: 22, left: 16, right: 10, bottom: 10),
+      padding: const EdgeInsets.only(top: 22, left: 14, right: 10, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,7 +33,7 @@ class DashboardCard extends StatelessWidget {
                   cardModel.iconPath,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Flexible(
                 child: Text(
                   cardModel.title,
