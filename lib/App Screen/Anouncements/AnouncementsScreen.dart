@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:private_property_management/App%20Screen/Proprties/Workers/add_worker_screen.dart';
-import 'package:private_property_management/App%20Screen/Proprties/Workers/worker_details_screen.dart';
-import 'package:private_property_management/Controllers/WorkersController.dart';
-import 'package:private_property_management/Widgest/WorkerCard.dart';
+import 'package:private_property_management/App%20Screen/Anouncements/AddAnoucementsScreen.dart';
+import 'package:private_property_management/Controllers/AnnouncementsController.dart';
+import 'package:private_property_management/Widgest/AnnouncementCard.dart';
 
-class WorkersListScreen extends StatelessWidget {
-  final WorkersController _workersController = Get.put(WorkersController());
+class AnnouncementsScreen extends StatelessWidget {
+  final AnnouncementsController _controller =
+      Get.put(AnnouncementsController());
 
-  WorkersListScreen({super.key});
+  AnnouncementsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class WorkersListScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Section
+            // Header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
               child: Row(
@@ -34,7 +34,7 @@ class WorkersListScreen extends StatelessWidget {
                     ),
                   ),
                   const Text(
-                    "Workers",
+                    "Announcements",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
@@ -43,10 +43,7 @@ class WorkersListScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => AddWorkerScreen())!.then((_) {
-                        // Refresh workers when returning to this screen
-                        _workersController.refreshWorkers();
-                      });
+                      Get.to(AddAnnouncementScreen());
                     },
                     child: const CircleAvatar(
                       radius: 22,
@@ -88,13 +85,13 @@ class WorkersListScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Workers List
+            // Announcements List
             Expanded(
               child: Obx(() {
-                if (_workersController.workers.isEmpty) {
+                if (_controller.announcements.isEmpty) {
                   return const Center(
                     child: Text(
-                      "No workers found.",
+                      "No announcements found.",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -106,15 +103,10 @@ class WorkersListScreen extends StatelessWidget {
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   physics: const BouncingScrollPhysics(),
-                  itemCount: _workersController.workers.length,
+                  itemCount: _controller.announcements.length,
                   itemBuilder: (context, index) {
-                    final worker = _workersController.workers[index];
-                    return WorkerCard(
-                      worker: worker,
-                      onTap: () {
-                        Get.to(() => WorkerDetailsScreen(worker: worker));
-                      },
-                    );
+                    final announcement = _controller.announcements[index];
+                    return AnnouncementCard(announcement: announcement);
                   },
                 );
               }),

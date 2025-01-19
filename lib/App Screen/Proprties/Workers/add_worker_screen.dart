@@ -1,50 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:private_property_management/Models/PropertyModel.dart';
+import 'package:get/get.dart';
+import 'package:private_property_management/Controllers/AddWorkerController.dart';
+import 'package:private_property_management/Controllers/PropertyController.dart';
 import 'package:private_property_management/Widgest/CustomTextField.dart';
-import 'package:private_property_management/Widgest/PropertyCard.dart';
+import 'package:private_property_management/Widgest/WorkerPropertyCard.dart';
 
-class AddWorkerScreen extends StatefulWidget {
-  const AddWorkerScreen({super.key});
+class AddWorkerScreen extends StatelessWidget {
+  final AddWorkerController _workerController = Get.put(AddWorkerController());
+  final PropertyController _propertyController = Get.find<PropertyController>();
 
-  @override
-  State<AddWorkerScreen> createState() => _AddWorkerScreenState();
-}
+  final TextEditingController workerIdController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
-class _AddWorkerScreenState extends State<AddWorkerScreen> {
-  List<PropertyModel> properties = [
-    PropertyModel(
-      title: "Sky Dandelions",
-      id: "1163213",
-      address: "Street, City, State, Zip Code, Country",
-      type: "Residential",
-      units: 20,
-      description:
-          "Lorem ipsum dolor sit amet consectetur. Feugiat lorem feugiat sit mauris justo vulputate enim lobortis morbi.",
-      createdDate: "20/01/2024",
-      updatedDate: "20/01/2024",
-      status: "Active",
-      imagePath: '',
-    ),
-    PropertyModel(
-      title: "Blue Horizon",
-      id: "1163214",
-      address: "Street, City, State, Zip Code, Country",
-      type: "Residential",
-      units: 10,
-      description:
-          "Lorem ipsum dolor sit amet consectetur. Feugiat lorem feugiat sit mauris justo vulputate enim lobortis morbi.",
-      createdDate: "20/01/2024",
-      updatedDate: "20/01/2024",
-      status: "Active",
-      imagePath: '',
-    ),
-  ];
+  RxString selectedRole = ''.obs;
 
-  void _deleteProperty(int index) {
-    setState(() {
-      properties.removeAt(index);
-    });
-  }
+  AddWorkerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +35,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => Get.back(),
                       child: const CircleAvatar(
                         radius: 22,
                         backgroundColor: Color.fromRGBO(245, 244, 248, 1),
@@ -85,21 +59,91 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                const CustomTextField(height: 48, hintText: "Worker ID"),
-                const SizedBox(height: 10),
-                const CustomTextField(
+                // Input Fields
+                CustomTextField(
                   height: 48,
+                  controller: workerIdController,
+                  hintText: "Worker ID",
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  height: 48,
+                  controller: firstNameController,
                   hintText: "First Name",
                 ),
                 const SizedBox(height: 10),
-                const CustomTextField(height: 48, hintText: "Last Name"),
+                CustomTextField(
+                  height: 48,
+                  controller: lastNameController,
+                  hintText: "Last Name",
+                ),
                 const SizedBox(height: 10),
-                const CustomTextField(height: 48, hintText: "Email Address"),
+                CustomTextField(
+                  height: 48,
+                  controller: emailController,
+                  hintText: "Email Address",
+                ),
                 const SizedBox(height: 10),
-                const CustomTextField(height: 48, hintText: "Phone Number"),
+                CustomTextField(
+                  height: 48,
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  hintText: "Phone Number",
+                ),
                 const SizedBox(height: 10),
-                const CustomTextField(height: 48, hintText: "Role"),
+
+                Obx(() {
+                  return Container(
+                    height: 48,
+                    width: double.infinity,
+                    child: DropdownButtonFormField<String>(
+                      value: selectedRole.value.isEmpty
+                          ? null
+                          : selectedRole.value,
+                      onChanged: (value) {
+                        selectedRole.value = value!;
+                      },
+                      decoration: InputDecoration(
+                        fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        hintText: "Role",
+                        hintStyle: const TextStyle(
+                          height: 2.5,
+                          fontSize: 13,
+                          color: Color.fromRGBO(37, 43, 92, 1),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Color.fromRGBO(37, 43, 92, 1),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      items: const [
+                        DropdownMenuItem(
+                          value: "Manager",
+                          child: Text("Manager"),
+                        ),
+                        DropdownMenuItem(
+                          value: "Worker",
+                          child: Text("Worker"),
+                        ),
+                        DropdownMenuItem(
+                          value: "Admin",
+                          child: Text("Admin"),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
                 const SizedBox(height: 28),
+
+                // Assign Properties Section
                 const Row(
                   children: [
                     Text(
@@ -113,61 +157,68 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
+
+                // Search Field for Properties
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  height: 48,
                   decoration: BoxDecoration(
                     color: const Color.fromRGBO(245, 244, 248, 1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Search Property To Assign",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromRGBO(37, 43, 92, 1),
-                          ),
-                        ),
+                  child: TextField(
+                    controller: searchController,
+                    onChanged: (query) {
+                      _propertyController.searchProperties(query);
+                    },
+                    decoration: const InputDecoration(
+                      hintText: "Search Property To Assign",
+                      hintStyle: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(37, 43, 92, 1),
                       ),
-                      Icon(Icons.search, color: Color.fromRGBO(37, 43, 92, 1)),
-                    ],
+                      border: InputBorder.none,
+                      suffixIcon: Icon(
+                        Icons.search,
+                        color: Color.fromRGBO(37, 43, 92, 1),
+                        size: 22,
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
-                // Property List with Delete Swipe
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: properties.length,
-                  itemBuilder: (context, index) {
-                    final property = properties[index];
-                    return Dismissible(
-                      key: Key(property.id),
-                      direction: DismissDirection.endToStart,
-                      background: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color.fromRGBO(35, 79, 104, 1),
-                        ),
-                        child: const Icon(Icons.delete,
-                            color: Colors.white, size: 32),
-                      ),
-                      onDismissed: (direction) {
-                        _deleteProperty(index);
-                      },
-                      child: PropertyCard(property: property),
+
+                Obx(() {
+                  if (_propertyController.filteredProperties.isEmpty) {
+                    return const Center(
+                      child: Text("No properties found."),
                     );
-                  },
-                ),
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _propertyController.filteredProperties.length,
+                    itemBuilder: (context, index) {
+                      final property =
+                          _propertyController.filteredProperties[index];
+                      final isSelected = _workerController.selectedProperties
+                          .contains(property);
+                      return GestureDetector(
+                        onTap: () => _workerController.toggleProperty(property),
+                        child: Workerpropertycard(
+                          property: property,
+                          isSelected: isSelected,
+                        ),
+                      );
+                    },
+                  );
+                }),
 
-                const SizedBox(height: 92),
+                const SizedBox(height: 32),
 
-                // Add Button
+                // Add Worker Button
                 SizedBox(
                   height: 48,
                   width: MediaQuery.of(context).size.width - 96,
@@ -178,8 +229,23 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: () {
-                      // Add worker functionality
+                    onPressed: () async {
+                      if (selectedRole.value.isEmpty) {
+                        Get.snackbar(
+                          "Role Missing",
+                          "Please select a role for the worker.",
+                        );
+                        return;
+                      }
+                      await _workerController.addWorker(
+                        workerId: workerIdController.text,
+                        firstName: firstNameController.text,
+                        lastName: lastNameController.text,
+                        email: emailController.text,
+                        phone: phoneController.text,
+                        role: selectedRole.value,
+                      );
+                      Get.back(); // Navigate back after adding the worker
                     },
                     child: const Text(
                       "Add",
@@ -187,7 +253,6 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 32), // Small spacing at the bottom
               ],
             ),
           ),

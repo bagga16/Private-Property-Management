@@ -2,7 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:private_property_management/App%20Screen/Anouncements/AnouncementsScreen.dart';
+import 'package:private_property_management/App%20Screen/Lease%20Details/LeaseDetails.dart';
+import 'package:private_property_management/App%20Screen/Maintanance/MaintenanceScreen%20.dart';
 import 'package:private_property_management/App%20Screen/Notifications/NotificationScreen.dart';
+import 'package:private_property_management/App%20Screen/Payments/PaymentsScreen.dart';
+import 'package:private_property_management/App%20Screen/Proprties/Workers/workers_list_screen.dart';
 import 'package:private_property_management/Controllers/DashBoardController.dart';
 import 'package:private_property_management/Models/CardModel.dart';
 import 'package:private_property_management/Widgest/DashBoardCard.dart';
@@ -94,6 +99,7 @@ class DashboardScreen extends StatelessWidget {
                                     title: "Monthly Income",
                                     value: controller.monthlyIncome.value,
                                     iconPath: 'assets/icons/1.png',
+                                    goToPath: DashboardScreen(),
                                   ),
                                 ),
                               ),
@@ -115,6 +121,7 @@ class DashboardScreen extends StatelessWidget {
                                       value: controller.totalPayments.value
                                           .toString(),
                                       iconPath: 'assets/icons/2.png',
+                                      goToPath: PaymentsScreen(),
                                     ),
                                   ),
                                   DashboardCard(
@@ -123,6 +130,7 @@ class DashboardScreen extends StatelessWidget {
                                       value: controller.totalLeases.value
                                           .toString(),
                                       iconPath: 'assets/icons/4.png',
+                                      goToPath: LeaseDetailsScreen(),
                                     ),
                                   ),
                                   DashboardCard(
@@ -132,6 +140,9 @@ class DashboardScreen extends StatelessWidget {
                                           .totalMaintenanceRequests.value
                                           .toString(),
                                       iconPath: 'assets/icons/3.png',
+                                      goToPath: MaintenanceScreen(
+                                        tenantId: null,
+                                      ),
                                     ),
                                   ),
                                   DashboardCard(
@@ -140,6 +151,7 @@ class DashboardScreen extends StatelessWidget {
                                       value: controller.totalWorkers.value
                                           .toString(),
                                       iconPath: 'assets/icons/workers.png',
+                                      goToPath: WorkersListScreen(),
                                     ),
                                   ),
                                   DashboardCard(
@@ -148,6 +160,7 @@ class DashboardScreen extends StatelessWidget {
                                       value: controller.totalPayments.value
                                           .toString(),
                                       iconPath: 'assets/icons/5.png',
+                                      goToPath: PaymentsScreen(),
                                     ),
                                   ),
                                   DashboardCard(
@@ -156,6 +169,7 @@ class DashboardScreen extends StatelessWidget {
                                       value: controller.totalAnnouncements.value
                                           .toString(),
                                       iconPath: 'assets/icons/6.png',
+                                      goToPath: AnnouncementsScreen(),
                                     ),
                                   ),
                                 ],

@@ -523,6 +523,7 @@ class AddPropertyScreen extends StatelessWidget {
               CustomTextField(
                 controller: controller.descriptionController,
                 height: 156,
+                maxLines: 6,
                 hintText: "Description",
                 focusBorderColor: Colors.transparent,
               ),

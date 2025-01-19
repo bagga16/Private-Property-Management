@@ -117,7 +117,7 @@ class DashboardController extends GetxController {
 
   /// Fetch total workers
   Future<void> fetchTotalWorkers() async {
-    final snapshot = await _firestore.collection('workers').get();
+    final snapshot = await _firestore.collection('All Workers').get();
     totalWorkers.value = snapshot.docs.length;
   }
 
