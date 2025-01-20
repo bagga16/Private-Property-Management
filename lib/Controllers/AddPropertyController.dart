@@ -9,8 +9,11 @@ import 'package:uuid/uuid.dart';
 
 class AddPropertyController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // Tracks submission status
+  final RxBool isSubmitting = false.obs;
   final DatabaseReference _realtimeDB =
       FirebaseDatabase.instance.ref().child('property_images');
+
   final Uuid uuid = const Uuid();
 
   final RxList<File> selectedImages =
@@ -49,6 +52,7 @@ class AddPropertyController extends GetxController {
     }
 
     try {
+      isSubmitting.value = true;
       final String propertyId = uuid.v4();
       List<String> imageUrls = [];
 
@@ -93,6 +97,8 @@ class AddPropertyController extends GetxController {
       print("Error adding property: $e");
       Get.snackbar("Error", "Error adding property: $e",
           snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      isSubmitting.value = false; // Stop the loading indicator
     }
   }
 

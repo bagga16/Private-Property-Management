@@ -11,6 +11,9 @@ class TenantsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Reload tenants whenever the screen is opened
+    controller.refreshTenants();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -42,13 +45,10 @@ class TenantsScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddTanentsScreen(),
-                        ),
-                      );
+                    onTap: () async {
+                      await Get.to(() => AddTanentsScreen());
+                      // Refresh tenants after adding a new one
+                      controller.refreshTenants();
                     },
                     child: const CircleAvatar(
                       radius: 22,
@@ -113,7 +113,8 @@ class TenantsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => TenantDetailsScreen(
-                                    tenant: tenant.toMap())),
+                                      tenant: tenant.toMap(),
+                                    )),
                           );
                         },
                       );

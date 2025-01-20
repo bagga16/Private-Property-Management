@@ -99,13 +99,13 @@ class DashboardController extends GetxController {
 
   /// Fetch total payments
   Future<void> fetchTotalPayments() async {
-    final snapshot = await _firestore.collection('payments').get();
+    final snapshot = await _firestore.collection('All Tenants').get();
     totalPayments.value = snapshot.docs.length;
   }
 
   /// Fetch total leases
   Future<void> fetchTotalLeases() async {
-    final snapshot = await _firestore.collection('leases').get();
+    final snapshot = await _firestore.collection('All Tenants').get();
     totalLeases.value = snapshot.docs.length;
   }
 
@@ -123,7 +123,7 @@ class DashboardController extends GetxController {
 
   /// Fetch total announcements
   Future<void> fetchTotalAnnouncements() async {
-    final snapshot = await _firestore.collection('announcements').get();
+    final snapshot = await _firestore.collection('All Announcements').get();
     totalAnnouncements.value = snapshot.docs.length;
   }
 }

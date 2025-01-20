@@ -153,10 +153,10 @@ class TenantDetailsScreen extends StatelessWidget {
                 SizedBox(
                   height: 8,
                 ),
-                _buildDetailColumn("Lease Start",
-                    getSafeString(formatDate(tenant["leaseStart"]))),
                 _buildDetailColumn(
-                    "Lease End", getSafeString(formatDate(tenant["leaseEnd"]))),
+                    "Lease Start", getSafeString((tenant["leaseStart"]))),
+                _buildDetailColumn(
+                    "Lease End", getSafeString((tenant["leaseEnd"]))),
 
                 const SizedBox(height: 16),
 
