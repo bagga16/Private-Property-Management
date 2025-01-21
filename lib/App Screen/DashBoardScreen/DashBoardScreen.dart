@@ -7,6 +7,7 @@ import 'package:private_property_management/App%20Screen/Lease%20Details/LeaseDe
 import 'package:private_property_management/App%20Screen/Maintanance/MaintenanceScreen%20.dart';
 import 'package:private_property_management/App%20Screen/Notifications/NotificationScreen.dart';
 import 'package:private_property_management/App%20Screen/Payments/PaymentsScreen.dart';
+import 'package:private_property_management/App%20Screen/Proprties/Units/UnitsListScreen.dart';
 import 'package:private_property_management/App%20Screen/Proprties/Workers/workers_list_screen.dart';
 import 'package:private_property_management/Controllers/DashBoardController.dart';
 import 'package:private_property_management/Models/CardModel.dart';
@@ -156,20 +157,20 @@ class DashboardScreen extends StatelessWidget {
                                   ),
                                   DashboardCard(
                                     cardModel: CardModel(
-                                      title: "Payments ",
-                                      value: controller.totalPayments.value
-                                          .toString(),
-                                      iconPath: 'assets/icons/5.png',
-                                      goToPath: PaymentsScreen(),
-                                    ),
-                                  ),
-                                  DashboardCard(
-                                    cardModel: CardModel(
                                       title: "Announcement",
                                       value: controller.totalAnnouncements.value
                                           .toString(),
                                       iconPath: 'assets/icons/6.png',
                                       goToPath: AnnouncementsScreen(),
+                                    ),
+                                  ),
+                                  DashboardCard(
+                                    cardModel: CardModel(
+                                      title: "Units ",
+                                      value: controller.totalUnits.value
+                                          .toString(),
+                                      iconPath: 'assets/icons/5.png',
+                                      goToPath: UnitsListScreen(),
                                     ),
                                   ),
                                 ],
