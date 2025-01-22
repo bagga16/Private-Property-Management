@@ -1,27 +1,35 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class UnitDetailsController extends GetxController {
-  final FirebaseDatabase _realtimeDb = FirebaseDatabase.instance;
+  final DatabaseReference _realtimeDb = FirebaseDatabase.instance.ref();
 
-  var unitImages = <String>[].obs; // List to hold fetched images
-  var isLoadingImages = false.obs;
+  RxList<String> imageBase64List = <String>[].obs; // Observables for images
+  RxBool isLoading = false.obs;
+  RxInt currentImageIndex = 0.obs;
 
-  // Fetch images for a specific unit from Realtime Database
-  Future<void> fetchUnitImages(String unitId) async {
+  // Fetch Images from Realtime Database
+  Future<void> fetchUnitImages(String documentId) async {
     try {
-      isLoadingImages.value = true;
-      final snapshot = await _realtimeDb.ref('units/$unitId/images').get();
+      isLoading.value = true;
+      final DataSnapshot snapshot =
+          await _realtimeDb.child('unitImages/$documentId').get();
+
       if (snapshot.value != null) {
-        final data = snapshot.value as Map;
-        unitImages.value = data.values.map((e) => e as String).toList();
+        Map<dynamic, dynamic> images = snapshot.value as Map<dynamic, dynamic>;
+
+        // Extract Base64 strings into the observable list
+        imageBase64List.value = images.values
+            .map((value) => value['imageBase64'] as String)
+            .toList();
       } else {
-        unitImages.clear();
+        imageBase64List.clear(); // No images found
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to fetch images: $e");
+      print("Error fetching images: $e");
     } finally {
-      isLoadingImages.value = false;
+      isLoading.value = false;
     }
   }
 }

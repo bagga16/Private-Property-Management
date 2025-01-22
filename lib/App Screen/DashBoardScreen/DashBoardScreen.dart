@@ -141,9 +141,7 @@ class DashboardScreen extends StatelessWidget {
                                           .totalMaintenanceRequests.value
                                           .toString(),
                                       iconPath: 'assets/icons/3.png',
-                                      goToPath: MaintenanceScreen(
-                                        tenantId: null,
-                                      ),
+                                      goToPath: MaintenanceScreen(),
                                     ),
                                   ),
                                   DashboardCard(

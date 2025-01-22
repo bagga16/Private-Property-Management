@@ -18,6 +18,10 @@ class WorkerDetailsController extends GetxController {
         createdDate: property['createdDate'] ?? '',
         updatedDate: property['updatedDate'] ?? '',
         status: property['status'] ?? 'Inactive',
+        city: '',
+        country: '',
+        state: '',
+        zip: '',
       );
     }).toList();
   }

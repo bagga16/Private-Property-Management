@@ -8,6 +8,10 @@ class PropertyModel {
   final String createdDate;
   final String updatedDate;
   final String status;
+  final String city;
+  final String country;
+  final String zip;
+  final String state;
   String? imagePath; // Nullable to allow flexibility
   final String? rent;
 
@@ -21,6 +25,10 @@ class PropertyModel {
     required this.createdDate,
     required this.updatedDate,
     required this.status,
+    required this.city,
+    required this.country,
+    required this.state,
+    required this.zip,
     this.imagePath,
     this.rent,
   });
@@ -38,6 +46,10 @@ class PropertyModel {
       'status': status,
       'imagePath': imagePath,
       'rent': rent,
+      'zip': zip,
+      'state': state,
+      'country': country,
+      'city': country,
     };
   }
 
@@ -53,6 +65,10 @@ class PropertyModel {
       updatedDate: map['updatedDate'] ?? 'N/A',
       status: map['status'] ?? 'Unknown',
       rent: map['rent'],
+      country: map['country'],
+      state: map['state'],
+      city: map['city'],
+      zip: map['zip'],
     );
   }
 }

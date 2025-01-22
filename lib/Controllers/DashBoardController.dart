@@ -113,7 +113,7 @@ class DashboardController extends GetxController {
 
   /// Fetch total maintenance requests
   Future<void> fetchTotalMaintenanceRequests() async {
-    final snapshot = await _firestore.collection('maintenance').get();
+    final snapshot = await _firestore.collection('Maintenance Requests').get();
     totalMaintenanceRequests.value = snapshot.docs.length;
   }
 

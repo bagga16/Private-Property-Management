@@ -144,6 +144,7 @@ class AddPropertyScreen extends StatelessWidget {
                         child: CustomTextField(
                             controller: controller.zipController,
                             height: 48,
+                            keyboardType: TextInputType.phone,
                             hintText: "Zip Code")),
                     const SizedBox(width: 10),
                     Expanded(

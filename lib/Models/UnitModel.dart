@@ -1,38 +1,12 @@
-// class UnitModel {
-//   final String name;
-//   final String imagePath;
-//   final String unitId;
-//   final String propertyId;
-//   final String status;
-//   final String rentAmount;
-//   final String area;
-//   final String createdDate;
-//   final String updatedDate;
-
-//   UnitModel({
-//     required this.imagePath,
-//     required this.name,
-//     required this.unitId,
-//     required this.propertyId,
-//     required this.status,
-//     required this.rentAmount,
-//     required this.area,
-//     required this.createdDate,
-//     required this.updatedDate,
-//   });
-//}
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UnitModel {
   final String name;
-  //late final String firestoreId;
+
   final String unitId;
   final String propertyId;
   final String status;
   final String rentAmount;
   final String area;
-  // final String description;
+  final String description;
   final String createdDate;
   final String updatedDate;
   final String documentId;
@@ -41,12 +15,11 @@ class UnitModel {
 
   UnitModel({
     required this.name,
-    //  required this.firestoreId,
     required this.unitId,
     required this.propertyId,
     required this.status,
     required this.rentAmount,
-    //required this.description,
+    required this.description,
     required this.area,
     required this.documentId,
     required this.createdDate,

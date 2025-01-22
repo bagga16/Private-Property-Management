@@ -167,9 +167,9 @@ class AddWorkerScreen extends StatelessWidget {
                   ),
                   child: TextField(
                     controller: searchController,
-                    onChanged: (query) {
-                      _propertyController.searchProperties(query);
-                    },
+                    // onChanged: (query) {
+                    //   _propertyController.searchProperties(query);
+                    // },
                     decoration: const InputDecoration(
                       hintText: "Search Property To Assign",
                       hintStyle: TextStyle(

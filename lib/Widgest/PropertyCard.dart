@@ -362,15 +362,49 @@ class PropertyCard extends StatelessWidget {
                               color: Color.fromRGBO(139, 200, 63, 1),
                             ),
                             Flexible(
-                              child: Text(
-                                property.address,
-                                style: const TextStyle(
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color.fromRGBO(83, 88, 122, 1),
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    property.address,
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color.fromRGBO(83, 88, 122, 1),
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    property.state,
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color.fromRGBO(83, 88, 122, 1),
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    property.zip,
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color.fromRGBO(83, 88, 122, 1),
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    property.country,
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color.fromRGBO(83, 88, 122, 1),
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
                             ),
                           ],
