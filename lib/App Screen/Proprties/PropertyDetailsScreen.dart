@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:private_property_management/App%20Screen/Proprties/EditPropertyScreen.dart';
 import 'package:private_property_management/App%20Screen/Proprties/Units/UnitsListScreen.dart';
+import 'package:private_property_management/Controllers/PropertyDetailsController.dart';
 import 'package:private_property_management/Models/PropertyModel.dart';
 import 'package:private_property_management/Widgest/PaymentCard.dart';
 
@@ -9,6 +12,7 @@ class PropertyDetailsScreen extends StatelessWidget {
   final PropertyModel property;
 
   const PropertyDetailsScreen({super.key, required this.property});
+
   String formatDate(String date) {
     final dateTime = DateTime.parse(date);
     return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
@@ -20,6 +24,9 @@ class PropertyDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PropertyDetailsController controller =
+        Get.put(PropertyDetailsController(propertyId: property.id));
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -49,12 +56,29 @@ class PropertyDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () async {
+                      // Fetch property data from Firestore
+                      DocumentSnapshot snapshot = await FirebaseFirestore
+                          .instance
+                          .collection('All Properties')
+                          .doc(property.id)
+                          .get();
+
+                      if (snapshot.exists) {
+                        Get.to(() => EditPropertyScreen(
+                            propertyData:
+                                snapshot.data() as Map<String, dynamic>));
+                      } else {
+                        Get.snackbar("Error", "Property not found.",
+                            snackPosition: SnackPosition.BOTTOM);
+                      }
+                    },
                     child: const CircleAvatar(
                       radius: 22,
                       backgroundColor: Color.fromRGBO(37, 43, 92, 1),
                       child: Image(
-                          image: AssetImage('assets/icons/edditProfile.png')),
+                        image: AssetImage('assets/icons/edditProfile.png'),
+                      ),
                     ),
                   ),
                 ],
@@ -116,20 +140,24 @@ class PropertyDetailsScreen extends StatelessWidget {
                       value2: property.type,
                     ),
                     const SizedBox(height: 22),
-                    _buildTwoColumnRow(
-                      title1: "No. of Units",
-                      value1: property.units.toString(),
-                      trailingIcon1: const Icon(
-                        Icons.upload_file_outlined,
-                        size: 18,
-                        color: Color.fromRGBO(139, 200, 63, 1),
-                      ),
-                      onIconTap1: () {
-                        Get.to(() => UnitsListScreen());
-                      },
-                      title2: "Status",
-                      value2: property.status,
-                    ),
+                    Obx(() {
+                      return _buildTwoColumnRow(
+                        title1: "No. of Units",
+                        value1: controller.totalUnits.value.toString(),
+                        trailingIcon1: const Icon(
+                          Icons.upload_file_outlined,
+                          size: 18,
+                          color: Color.fromRGBO(139, 200, 63, 1),
+                        ),
+                        onIconTap1: () {
+                          Get.to(() => UnitsListScreen(
+                                propertyId: property.id,
+                              ));
+                        },
+                        title2: "Status",
+                        value2: property.status,
+                      );
+                    }),
                     const SizedBox(height: 22),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

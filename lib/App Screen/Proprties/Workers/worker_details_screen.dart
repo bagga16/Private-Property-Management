@@ -106,9 +106,9 @@
 //                     child: const CircleAvatar(
 //                       radius: 22,
 //                       backgroundColor: Color.fromRGBO(37, 43, 92, 1),
-//                       child: Image(
-//                         image: AssetImage('assets/icons/edditProfile.png'),
-//                       ),
+// child: Image(
+//   image: AssetImage('assets/icons/edditProfile.png'),
+// ),
 //                     ),
 //                   ),
 //                 ],
@@ -232,30 +232,30 @@
 //                   color: Color.fromRGBO(37, 43, 92, 1),
 //                 ),
 //               ),
-//               const SizedBox(height: 16),
-//               Container(
-//                 padding:
-//                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-//                 decoration: BoxDecoration(
-//                   color: const Color.fromRGBO(245, 244, 248, 1),
-//                   borderRadius: BorderRadius.circular(12),
-//                 ),
-//                 child: const Row(
-//                   children: [
-//                     Expanded(
-//                       child: Text(
-//                         "Search Property To Assign",
-//                         style: TextStyle(
-//                             fontSize: 12,
-//                             height: 2,
-//                             color: Color.fromRGBO(37, 43, 92, 1)),
-//                       ),
-//                     ),
-//                     Icon(Icons.search, color: Color.fromRGBO(37, 43, 92, 1)),
-//                   ],
-//                 ),
-//               ),
-//               const SizedBox(height: 10),
+// const SizedBox(height: 16),
+// Container(
+//   padding:
+//       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//   decoration: BoxDecoration(
+//     color: const Color.fromRGBO(245, 244, 248, 1),
+//     borderRadius: BorderRadius.circular(12),
+//   ),
+//   child: const Row(
+//     children: [
+//       Expanded(
+//         child: Text(
+//           "Search Property To Assign",
+//           style: TextStyle(
+//               fontSize: 12,
+//               height: 2,
+//               color: Color.fromRGBO(37, 43, 92, 1)),
+//         ),
+//       ),
+//       Icon(Icons.search, color: Color.fromRGBO(37, 43, 92, 1)),
+//     ],
+//   ),
+// ),
+// const SizedBox(height: 10),
 //               Expanded(
 //                 child: ListView.builder(
 //                   itemCount: properties.length,
@@ -290,11 +290,13 @@
 //   }
 // }
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
-import 'package:private_property_management/Controllers/WrokersDetailsController.dart';
+import 'package:private_property_management/App%20Screen/Proprties/Workers/EditWorkerScreen.dart';
+import 'package:private_property_management/Controllers/WorkerControllrs/WrokersDetailsController.dart';
 import 'package:private_property_management/Models/WorkerModel.dart';
 import 'package:private_property_management/Widgest/PropertyCard.dart';
 import 'package:private_property_management/Widgest/WorkerPropertyCard.dart';
@@ -349,23 +351,45 @@ class WorkerDetailsScreen extends StatelessWidget {
                       color: Color.fromRGBO(37, 43, 92, 1),
                     ),
                   ),
-                  const CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Color.fromRGBO(37, 43, 92, 1),
-                    child: Icon(Icons.edit, color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => EditWorkerScreen(
+                            workerDocumentId: worker.id,
+                            workerData: {},
+                          ));
+                    },
+                    child: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Color.fromRGBO(37, 43, 92, 1),
+                      child: Image(
+                        image: AssetImage('assets/icons/edditProfile.png'),
+                      ),
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 35),
 
               // Worker Details
-              Text(
-                worker.name,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(37, 43, 92, 1),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    worker.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(37, 43, 92, 1),
+                    ),
+                  ),
+                  Text(
+                    worker.role,
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromRGBO(139, 200, 63, 1)),
+                  ),
+                ],
               ),
               const SizedBox(height: 4),
               RichText(
@@ -480,6 +504,30 @@ class WorkerDetailsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(245, 244, 248, 1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Search Properties Assigned",
+                        style: TextStyle(
+                            fontSize: 12,
+                            height: 2,
+                            color: Color.fromRGBO(37, 43, 92, 1)),
+                      ),
+                    ),
+                    Icon(Icons.search,
+                        size: 22, color: Color.fromRGBO(37, 43, 92, 1)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
               Expanded(
                 child: Obx(() {
                   if (_controller.assignedProperties.isEmpty) {

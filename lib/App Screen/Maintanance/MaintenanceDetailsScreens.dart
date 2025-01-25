@@ -345,10 +345,10 @@ class MaintenanceDetailsScreen extends StatelessWidget {
               const SizedBox(height: 9),
               // Request Info
               Text(
-                "Requested ID: 100012 ${request.id}",
+                "Requested ID#  ${request.id.substring(0, 6)}",
                 style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
                   color: Color.fromRGBO(37, 43, 92, 1),
                 ),
               ),

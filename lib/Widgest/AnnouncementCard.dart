@@ -64,6 +64,11 @@ class AnnouncementCard extends StatelessWidget {
   const AnnouncementCard({Key? key, required this.announcement})
       : super(key: key);
 
+  String formatDate(String date) {
+    final dateTime = DateTime.parse(date);
+    return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,10 +92,12 @@ class AnnouncementCard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: Color.fromRGBO(37, 43, 92, 1),
                 ),
+                softWrap: true,
+                overflow: TextOverflow.visible,
               ),
               // Date
               Text(
-                "Date: ${announcement.date}",
+                "Date: ${formatDate(announcement.date)}",
                 style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,

@@ -9,12 +9,20 @@ class UnitCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const UnitCard({super.key, required this.unit, required this.onTap});
+  String formatDate(String date) {
+    final dateTime = DateTime.parse(date);
+    return '${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
     Uint8List? decodedImage;
-    if (unit.imagePath.isNotEmpty) {
-      decodedImage = base64Decode(unit.imagePath);
+    try {
+      if (unit.imagePath.isNotEmpty) {
+        decodedImage = base64Decode(unit.imagePath);
+      }
+    } catch (e) {
+      print("Error decoding image for unit: ${unit.unitId}");
     }
     return GestureDetector(
       onTap: onTap,
@@ -29,31 +37,19 @@ class UnitCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
+              borderRadius: BorderRadius.circular(8),
               child: decodedImage != null
-                  ? Image.memory(
-                      decodedImage,
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      'assets/images/placeholder.png', // Placeholder if no image
-                      height: 150,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                  ? Image.memory(decodedImage,
+                      height: 150, width: double.infinity, fit: BoxFit.fill)
+                  : Image.asset('assets/placeholder.png', height: 150),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 18),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 RichText(
                   text: TextSpan(
-                    text: unit.name,
+                    text: unit.unitName,
                     style: const TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.bold,
@@ -61,7 +57,7 @@ class UnitCard extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: "  (ID: ${unit.documentId.substring(0, 6)})",
+                        text: "  (ID: ${unit.unitId.substring(0, 7)})",
                         style: const TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.w400,
@@ -96,7 +92,7 @@ class UnitCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Unit ID: ${unit.unitId}",
+                  "Unit ID: ${unit.unitId.substring(0, 7)}",
                   style: const TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w400,
@@ -104,7 +100,7 @@ class UnitCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Property ID: ${unit.propertyId}",
+                  "Property ID: ${unit.propertyId.substring(0, 7)}",
                   style: const TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w400,
@@ -152,7 +148,7 @@ class UnitCard extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: unit.createdDate,
+                        text: formatDate(unit.createdDate),
                         style: const TextStyle(
                           fontSize: 9.2,
                           fontWeight: FontWeight.w400,
@@ -172,7 +168,7 @@ class UnitCard extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: unit.updatedDate,
+                        text: formatDate(unit.updatedDate),
                         style: const TextStyle(
                           fontSize: 9.2,
                           fontWeight: FontWeight.w400,

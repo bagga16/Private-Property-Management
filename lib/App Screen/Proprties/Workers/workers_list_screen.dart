@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:private_property_management/App%20Screen/Proprties/Workers/add_worker_screen.dart';
 import 'package:private_property_management/App%20Screen/Proprties/Workers/worker_details_screen.dart';
-import 'package:private_property_management/Controllers/WorkersController.dart';
+import 'package:private_property_management/Controllers/WorkerControllrs/WorkersController.dart';
 import 'package:private_property_management/Widgest/WorkerCard.dart';
 
 class WorkersListScreen extends StatelessWidget {

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:private_property_management/Controllers/AddTenantController.dart';
+import 'package:private_property_management/Controllers/TenantsControllers/EditTenantController.dart';
+import 'package:private_property_management/Models/TenantModel.dart';
 import 'package:private_property_management/Widgest/CustomTextField.dart';
 
-class AddTanentsScreen extends StatefulWidget {
-  AddTanentsScreen({super.key});
+class EditTenantScreen extends StatelessWidget {
+  final Tenant tenant;
 
-  @override
-  State<AddTanentsScreen> createState() => _AddTanentsScreenState();
-}
+  EditTenantScreen({Key? key, required this.tenant}) : super(key: key);
 
-class _AddTanentsScreenState extends State<AddTanentsScreen> {
-  final AddTenantController controller = Get.put(AddTenantController());
+  final EditTenantController controller = Get.put(EditTenantController());
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the controller with the tenant data
+    controller.initialize(tenant);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -26,11 +27,12 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Header
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => Get.back(),
                           child: const CircleAvatar(
                             radius: 22,
                             backgroundColor: Color.fromRGBO(245, 244, 248, 1),
@@ -39,7 +41,7 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                           ),
                         ),
                         const Text(
-                          "Add Tenant",
+                          "Edit Tenant",
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
@@ -50,13 +52,8 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    CustomTextField(
-                        controller: controller.tenantIdController,
-                        hintText: "Tenant ID",
-                        height: 48,
-                        keyboardType: TextInputType.phone,
-                        borderRadius: 10),
-                    const SizedBox(height: 10),
+
+                    // Fields
                     CustomTextField(
                         controller: controller.firstNameController,
                         hintText: "First Name",
@@ -124,12 +121,6 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         keyboardType: TextInputType.phone,
                         hintText: "Monthly Rent"),
                     const SizedBox(height: 10),
-                    CustomTextField(
-                        controller: controller.unitIdController,
-                        height: 48,
-                        keyboardType: TextInputType.phone,
-                        hintText: "Unit ID"),
-                    const SizedBox(height: 10),
                     Container(
                       height: 48,
                       width: double.infinity,
@@ -174,120 +165,13 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         height: 48,
                         keyboardType: TextInputType.phone,
                         hintText: "Security Deposit"),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 48,
-                      child: DropdownButtonFormField<String>(
-                        value: controller.paymentStatus.value.isEmpty
-                            ? null
-                            : controller.paymentStatus.value,
-                        onChanged: (value) =>
-                            controller.paymentStatus.value = value!,
-                        decoration: InputDecoration(
-                          fillColor: const Color.fromRGBO(245, 244, 248, 1),
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          hintText: "Payment Status",
-                          hintStyle: const TextStyle(
-                              height: 2.5,
-                              fontSize: 13,
-                              color: Color.fromRGBO(37, 43, 92, 1),
-                              fontWeight: FontWeight.w500),
-                        ),
-                        style: const TextStyle(
-                            fontSize: 13,
-                            color: Color.fromRGBO(37, 43, 92, 1),
-                            fontWeight: FontWeight.w500),
-                        items: const [
-                          DropdownMenuItem(value: "Paid", child: Text("Paid")),
-                          DropdownMenuItem(
-                              value: "Over Due", child: Text("Over Due")),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // GestureDetector(
-                    //   onTap: controller.pickFile,
-                    //   child: Container(
-                    //     width: double.infinity,
-                    //     height: 48,
-                    //     decoration: BoxDecoration(
-                    //         color: const Color.fromRGBO(245, 244, 248, 1),
-                    //         borderRadius: BorderRadius.circular(12)),
-                    //     child: Row(
-                    //       children: [
-                    //         const SizedBox(width: 10),
-                    //         const Icon(Icons.attach_file),
-                    //         const SizedBox(width: 10),
-                    //         Obx(() {
-                    //           return Text(
-                    //             controller.selectedFile.value != null
-                    //                 ? controller.selectedFile.value!.path
-                    //                     .split('/')
-                    //                     .last
-                    //                 : "Select Lease Document",
-                    //             style: const TextStyle(
-                    //                 fontSize: 13,
-                    //                 color: Color.fromRGBO(37, 43, 92, 1),
-                    //                 fontWeight: FontWeight.w600),
-                    //           );
-                    //         }),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-
-                    GestureDetector(
-                      onTap: controller.pickFiles,
-                      child: Container(
-                        width: double.infinity,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(245, 244, 248, 1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            const Icon(Icons.attach_file),
-                            const SizedBox(width: 10),
-                            Obx(() {
-                              if (controller.selectedFiles.isEmpty) {
-                                return const Text(
-                                  "Select Lease Documents",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(37, 43, 92, 1),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              } else {
-                                return Text(
-                                  "${controller.selectedFiles.length} file(s) selected",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(37, 43, 92, 1),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              }
-                            }),
-                          ],
-                        ),
-                      ),
-                    ),
-
                     const SizedBox(height: 100),
                     Center(
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width - 96,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: controller.addTenant,
+                          onPressed: controller.updateTenant,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 const Color.fromRGBO(139, 200, 63, 1),
@@ -296,7 +180,7 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                             ),
                           ),
                           child: const Text(
-                            "Add",
+                            "Update",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
@@ -309,7 +193,7 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
             ),
           ),
           Obx(() {
-            return controller.isSubmitting.value
+            return controller.isLoading.value
                 ? Container(
                     color: Colors.black.withOpacity(0.5),
                     child: const Center(child: CircularProgressIndicator()),

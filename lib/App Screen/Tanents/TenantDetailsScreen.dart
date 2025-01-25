@@ -1,15 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:private_property_management/App%20Screen/Tanents/EditTenantScreen.dart';
 import 'package:private_property_management/App%20Screen/Tanents/TanentsScreen.dart';
+import 'package:private_property_management/Controllers/TenantDetailsController.dart';
+import 'package:private_property_management/Models/TenantModel.dart';
 
 class TenantDetailsScreen extends StatelessWidget {
+  final String tenantDocId;
   final Map<String, dynamic> tenant;
 
-  const TenantDetailsScreen({super.key, required this.tenant});
+  const TenantDetailsScreen({
+    super.key,
+    required this.tenantDocId,
+    required this.tenant,
+  });
 
   String getSafeString(dynamic value, [String defaultValue = "N/A"]) {
-    return value?.toString() ??
-        defaultValue; // Return the value or "N/A" if null
+    if (value == null || (value is String && value.trim().isEmpty)) {
+      return defaultValue;
+    }
+    return value.toString();
   }
 
   String formatDate(String date) {
@@ -19,6 +30,11 @@ class TenantDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TenantDetailsController controller = Get.put(
+      TenantDetailsController(tenantDocId),
+      tag: tenantDocId,
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -52,11 +68,32 @@ class TenantDetailsScreen extends StatelessWidget {
                         color: Color.fromRGBO(37, 43, 92, 1),
                       ),
                     ),
-                    const CircleAvatar(
-                      radius: 22,
-                      backgroundColor: Color.fromRGBO(37, 43, 92, 1),
-                      child: Image(
-                          image: AssetImage('assets/icons/edditProfile.png')),
+                    GestureDetector(
+                      onTap: () async {
+                        // Fetch tenant details from Firestore
+                        final docSnapshot = await FirebaseFirestore.instance
+                            .collection('All Tenants')
+                            .doc(tenantDocId)
+                            .get();
+
+                        if (docSnapshot.exists) {
+                          // Convert Firestore data to Tenant object
+                          final tenant = Tenant.fromMap(
+                              docSnapshot.data()!, docSnapshot.id);
+
+                          // Navigate to EditTenantScreen with Tenant object
+                          Get.to(() => EditTenantScreen(tenant: tenant));
+                        } else {
+                          Get.snackbar("Error", "Tenant not found.");
+                        }
+                      },
+                      child: const CircleAvatar(
+                        radius: 22,
+                        backgroundColor: Color.fromRGBO(37, 43, 92, 1),
+                        child: Image(
+                          image: AssetImage('assets/icons/edditProfile.png'),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -127,11 +164,14 @@ class TenantDetailsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _buildDetailColumn("Unit ID", getSafeString(tenant["unitId"])),
-
-                _buildDetailColumn("Unit Numbere",
-                    "Apart ${getSafeString(tenant["unitNumber"], "0")}"),
                 _buildDetailColumn(
-                    "Rent Amount", "\$${getSafeString(tenant["rent"], "0")}"),
+                  "Unit Number",
+                  "Apart ${getSafeString(tenant["unitNumber"], "0")}",
+                ),
+                _buildDetailColumn(
+                  "Rent Amount",
+                  "\$${getSafeString(tenant["rent"], "0")}",
+                ),
 
                 const SizedBox(height: 16),
 
@@ -146,13 +186,11 @@ class TenantDetailsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
-                _buildDetailColumn("Security Deposite",
+                _buildDetailColumn("Security Deposit",
                     getSafeString(tenant["securityDeposit"])),
                 _buildDetailColumn(
                     "Payment Status", getSafeString(tenant["paymentStatus"])),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 _buildDetailColumn(
                     "Lease Start", getSafeString((tenant["leaseStart"]))),
                 _buildDetailColumn(
@@ -170,8 +208,32 @@ class TenantDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                _buildDocumentRow("Lease Document 1.pdf", "20/01/2024"),
-                _buildDocumentRow("Lease Document 2.pdf", "20/01/2024"),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (controller.leaseDocuments.isEmpty) {
+                    return const Text(
+                      "No documents found.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color.fromRGBO(83, 88, 122, 1),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: controller.leaseDocuments.map((doc) {
+                      return _buildDocumentRow(
+                        doc["name"] ?? "Unknown Document",
+                        formatDate(doc["uploadDate"] ?? "Unknown Date"),
+                        doc["url"] ?? "",
+                      );
+                    }).toList(),
+                  );
+                }),
+
                 const SizedBox(height: 48),
               ],
             ),
@@ -181,7 +243,8 @@ class TenantDetailsScreen extends StatelessWidget {
     );
   }
 
-  // Helper Widgets
+////////////
+// Helper Widgets
   Widget _buildDetailRow(IconData icon, String value) {
     return Row(
       children: [
@@ -225,28 +288,41 @@ class TenantDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDocumentRow(String name, String date) {
+  Widget _buildDocumentRow(String name, String uploadDate, String url) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align items at the top
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              const Icon(Icons.picture_as_pdf,
-                  color: Color.fromRGBO(223, 21, 37, 1), size: 20),
-              const SizedBox(width: 8),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Color.fromRGBO(83, 88, 122, 1),
+          Flexible(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.picture_as_pdf,
+                  color: Color.fromRGBO(223, 21, 37, 1),
+                  size: 20,
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    name,
+                    maxLines: 2, // Limit to 2 lines
+                    overflow: TextOverflow
+                        .ellipsis, // Add ellipsis if it exceeds 2 lines
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color.fromRGBO(83, 88, 122, 1),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 10), // Add spacing between name and date
           Text(
-            date,
+            uploadDate,
             style: const TextStyle(
               fontSize: 14,
               color: Color.fromRGBO(83, 88, 122, 1),
@@ -257,7 +333,7 @@ class TenantDetailsScreen extends StatelessWidget {
     );
   }
 
-  // Widget for Payment Card
+// Widget for Payment Card
   Widget _buildPaymentCard({
     required String name,
     required String rent,

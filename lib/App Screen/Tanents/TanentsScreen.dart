@@ -113,8 +113,8 @@ class TenantsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => TenantDetailsScreen(
-                                      tenant: tenant.toMap(),
-                                    )),
+                                    tenant: tenant.toMap(),
+                                    tenantDocId: tenant.id)),
                           );
                         },
                       );

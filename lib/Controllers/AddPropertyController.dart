@@ -92,7 +92,8 @@ class AddPropertyController extends GetxController {
           snackPosition: SnackPosition.BOTTOM);
 
       clearInputs();
-      Get.back(); // Navigate back to the previous screen
+
+      Get.offAllNamed('/property-screen');
     } catch (e) {
       print("Error adding property: $e");
       Get.snackbar("Error", "Error adding property: $e",

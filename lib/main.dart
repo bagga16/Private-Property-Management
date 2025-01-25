@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:private_property_management/App%20Screen/Anouncements/AnouncementsScreen.dart';
 import 'package:private_property_management/App%20Screen/Auth/Login.dart';
 import 'package:private_property_management/App%20Screen/Maintanance/MaintenanceScreen%20.dart';
-import 'package:private_property_management/App%20Screen/Proprties/Units/AddUnitScreen.dart';
-import 'package:private_property_management/App%20Screen/Proprties/Units/UnitsListScreen.dart';
+import 'package:private_property_management/App%20Screen/Proprties/PropertiesScreen.dart';
+import 'package:private_property_management/App%20Screen/Proprties/Workers/workers_list_screen.dart';
+import 'package:private_property_management/App%20Screen/Tanents/TanentsScreen.dart';
 import 'package:private_property_management/Controllers/AuthController.dart';
 import 'package:private_property_management/Home.dart';
 
@@ -36,15 +38,20 @@ class MyApp extends StatelessWidget {
           name: '/home',
           page: () => const HomeScreen(),
         ),
-        GetPage(
-          name: '/add-unit',
-          page: () => AddUnitScreen(),
-        ),
-        GetPage(
-          name: '/units-list',
-          page: () => UnitsListScreen(),
-        ),
+        // GetPage(
+        //   name: '/add-unit',
+        //   page: () => AddUnitScreen(),
+        // ),
+        // GetPage(
+        //   name: '/units-list',
+        //   page: () => UnitsListScreen(),
+        // ),
         GetPage(name: '/maintenance-screen', page: () => MaintenanceScreen()),
+        GetPage(name: '/property-screen', page: () => Propertiesscreen()),
+        GetPage(name: '/tenant-screen', page: () => TenantsScreen()),
+        GetPage(name: '/worker-screen', page: () => WorkersListScreen()),
+        GetPage(
+            name: '/announcements-screen', page: () => AnnouncementsScreen()),
         GetPage(
           name: '/maintenance-edit-screen',
           page: () => MaintenanceEditScreen(

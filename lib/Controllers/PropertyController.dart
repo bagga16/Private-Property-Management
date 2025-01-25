@@ -131,7 +131,7 @@ class PropertyController extends GetxController {
 
   RxList<PropertyModel> properties = <PropertyModel>[].obs; // All properties
   RxList<PropertyModel> filteredProperties = <PropertyModel>[].obs;
-
+  final RxInt totalUnits = 0.obs;
   RxBool isLoading = false.obs; // Loading state
   RxInt selectedTabIndex = 0.obs;
 

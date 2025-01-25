@@ -162,15 +162,15 @@ class DashboardScreen extends StatelessWidget {
                                       goToPath: AnnouncementsScreen(),
                                     ),
                                   ),
-                                  DashboardCard(
-                                    cardModel: CardModel(
-                                      title: "Units ",
-                                      value: controller.totalUnits.value
-                                          .toString(),
-                                      iconPath: 'assets/icons/5.png',
-                                      goToPath: UnitsListScreen(),
-                                    ),
-                                  ),
+                                  // DashboardCard(
+                                  //   cardModel: CardModel(
+                                  //     title: "Units ",
+                                  //     value: controller.totalUnits.value
+                                  //         .toString(),
+                                  //     iconPath: 'assets/icons/5.png',
+                                  //     goToPath: UnitsListScreen(),
+                                  //   ),
+                                  //),
                                 ],
                               ),
                             ],

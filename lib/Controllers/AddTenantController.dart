@@ -25,26 +25,31 @@ class AddTenantController extends GetxController {
   final RxBool isSubmitting = false.obs;
 
   // Selected file
-  final Rx<File?> selectedFile = Rx<File?>(null);
+
+  final RxList<File> selectedFiles = RxList<File>();
+  // final Rx<File?> selectedFile = Rx<File?>(null);
   final database = FirebaseDatabase.instance;
   final firestore = FirebaseFirestore.instance;
 
-  /// Select a file (PDF)
-  Future<void> pickFile() async {
+  /// Select multiple files (PDFs)
+  Future<void> pickFiles() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf'], // Allow only PDF files
+        allowedExtensions: ['pdf'],
+        allowMultiple: true, // Allow multiple files
       );
 
       if (result != null) {
-        selectedFile.value = File(result.files.single.path!);
-        Get.snackbar('File Selected', 'File: ${selectedFile.value!.path}');
+        selectedFiles.addAll(result.paths.map((path) => File(path!)));
+        Get.snackbar(
+            'Files Selected', '${selectedFiles.length} file(s) selected.');
       } else {
-        Get.snackbar('No File Selected', 'Please select a lease document.');
+        Get.snackbar(
+            'No Files Selected', 'Please select at least one lease document.');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to select a file: $e');
+      Get.snackbar('Error', 'Failed to select files: $e');
     }
   }
 
@@ -65,7 +70,6 @@ class AddTenantController extends GetxController {
     }
   }
 
-  /// Add tenant to Firestore
   Future<void> addTenant() async {
     if (!_validateInputs()) {
       Get.snackbar('Error', 'Please fill all required fields.');
@@ -75,19 +79,10 @@ class AddTenantController extends GetxController {
     try {
       isSubmitting.value = true;
 
-      // Upload the lease document to Firebase Realtime Database
-      String? filePath;
-      if (selectedFile.value != null) {
-        final tenantFileRef =
-            database.ref('tenants/${tenantIdController.text}/lease_document');
-        final fileData = selectedFile.value!.readAsBytesSync();
-        await tenantFileRef.set(fileData);
-        filePath = tenantFileRef.path;
-      }
+      // Prepare tenant data
       final leaseStartFormatted = _formatDate(leaseStartController.text);
       final leaseEndFormatted = _formatDate(leaseEndController.text);
 
-      // Prepare tenant data
       final tenantData = {
         'tenantId': tenantIdController.text,
         'name': '${firstNameController.text} ${lastNameController.text}',
@@ -100,16 +95,34 @@ class AddTenantController extends GetxController {
         'status': selectedStatus.value,
         'paymentStatus': paymentStatus.value,
         'securityDeposit': securityDepositController.text,
-        'leaseDocumentPath': filePath ?? '',
         'createdDate': DateTime.now().toIso8601String(),
         'updatedDate': DateTime.now().toIso8601String(),
       };
 
-      // Add tenant data to Firestore
-      await firestore.collection('All Tenants').add(tenantData);
+      // Add tenant data to Firestore and get the document ID
+      DocumentReference tenantDocRef =
+          await firestore.collection('All Tenants').add(tenantData);
+
+      // Upload lease documents to Realtime Database under the correct tenant ID
+      final leaseDocsRef = database.ref(
+          'tenants/${tenantDocRef.id}/lease_documents'); // Use Firestore doc ID
+
+      for (var file in selectedFiles) {
+        final uniqueKey =
+            leaseDocsRef.push().key; // Generate unique key for each file
+        if (uniqueKey != null) {
+          final fileName = file.path.split('/').last;
+          await leaseDocsRef.child(uniqueKey).set({
+            "fileName": fileName,
+            "fileData": file.readAsBytesSync().toList(),
+            "uploadDate": DateTime.now().toIso8601String(),
+          });
+        }
+      }
 
       Get.snackbar('Success', 'Tenant added successfully.');
       clearForm();
+      Get.offAllNamed('/tenant-screen');
     } catch (e) {
       Get.snackbar('Error', 'Failed to add tenant: $e');
     } finally {
@@ -117,7 +130,7 @@ class AddTenantController extends GetxController {
     }
   }
 
-  /// Validate inputs
+// Validate inputs
   bool _validateInputs() {
     return tenantIdController.text.isNotEmpty &&
         firstNameController.text.isNotEmpty &&
@@ -143,7 +156,7 @@ class AddTenantController extends GetxController {
     securityDepositController.clear();
     selectedStatus.value = '';
     paymentStatus.value = '';
-    selectedFile.value = null;
+    selectedFiles.clear();
   }
 
   String _formatDate(String date) {
