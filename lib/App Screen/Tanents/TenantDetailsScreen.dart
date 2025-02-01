@@ -142,14 +142,27 @@ class TenantDetailsScreen extends StatelessWidget {
                     getSafeString(formatDate(tenant["updatedDate"]))),
 
                 const SizedBox(height: 16),
-                _buildPaymentCard(
-                  name: "John Martin",
-                  rent: "\$235/",
-                  statusLabel: "Over Due (7 Days)",
-                  statusColor: const Color.fromRGBO(223, 21, 37, 1),
-                  buttonText: "View Details",
-                  isDue: true,
-                ),
+
+                Obx(() {
+                  if (controller.paymentDetails.isEmpty) {
+                    return const SizedBox.shrink(); // ✅ Hide if no payments
+                  }
+
+                  return Column(
+                    children: controller.paymentDetails.map((payment) {
+                      return _buildPaymentCard(
+                        name: tenant["name"] ?? "Unknown",
+                        rent: "\$${payment["amount"]}/",
+                        statusLabel: payment["paymentStatus"],
+                        statusColor: payment["paymentStatus"] == "Paid"
+                            ? const Color.fromRGBO(139, 200, 63, 1)
+                            : const Color.fromRGBO(223, 21, 37, 1),
+                        buttonText: "View Details",
+                        isDue: payment["paymentStatus"] != "Paid",
+                      );
+                    }).toList(),
+                  );
+                }),
 
                 const SizedBox(height: 16),
 
@@ -163,14 +176,14 @@ class TenantDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                _buildDetailColumn("Unit ID", getSafeString(tenant["unitId"])),
+                _buildDetailColumn("Unit ID", (tenant["unitId"])),
                 _buildDetailColumn(
                   "Unit Number",
-                  "Apart ${getSafeString(tenant["unitNumber"], "0")}",
+                  "${getSafeString(tenant["name"], "Apart 101")}",
                 ),
                 _buildDetailColumn(
                   "Rent Amount",
-                  "\$${getSafeString(tenant["rent"], "0")}",
+                  "\$${getSafeString(tenant["rentAmount"], "0")}",
                 ),
 
                 const SizedBox(height: 16),
@@ -191,10 +204,10 @@ class TenantDetailsScreen extends StatelessWidget {
                 _buildDetailColumn(
                     "Payment Status", getSafeString(tenant["paymentStatus"])),
                 const SizedBox(height: 8),
+                _buildDetailColumn("Lease Start",
+                    getSafeString(formatDate(tenant["leaseStart"]))),
                 _buildDetailColumn(
-                    "Lease Start", getSafeString((tenant["leaseStart"]))),
-                _buildDetailColumn(
-                    "Lease End", getSafeString((tenant["leaseEnd"]))),
+                    "Lease End", getSafeString(formatDate(tenant["leaseEnd"]))),
 
                 const SizedBox(height: 16),
 
@@ -227,7 +240,7 @@ class TenantDetailsScreen extends StatelessWidget {
                     children: controller.leaseDocuments.map((doc) {
                       return _buildDocumentRow(
                         doc["name"] ?? "Unknown Document",
-                        formatDate(doc["uploadDate"] ?? "Unknown Date"),
+                        (doc["uploadDate"] ?? "Unknown Date"),
                         doc["url"] ?? "",
                       );
                     }).toList(),

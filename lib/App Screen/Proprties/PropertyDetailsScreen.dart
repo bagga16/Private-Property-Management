@@ -223,26 +223,28 @@ class PropertyDetailsScreen extends StatelessWidget {
 
               // Payment Cards
               PaymentCard(
-                name: "John Bagga",
+                userName: "John Bagga",
                 rent: property.rent.toString(),
                 status: "Over Due (7 Days)",
                 statusColor: const Color.fromRGBO(223, 21, 37, 1),
-                unit: "Appart ${property.units.toString()}",
+                unitName: "Appart ${property.units.toString()}",
                 updated: property.updatedDate,
                 tenantStatus: '',
                 daysRemaining: 2,
+                onViewDetails: () {},
               ),
 
               const SizedBox(height: 12),
               PaymentCard(
-                name: "John Bagga",
+                userName: "John Bagga",
                 rent: property.rent.toString(),
                 status: "Due in (7 Days)",
                 statusColor: const Color.fromRGBO(139, 200, 63, 1),
-                unit: "Appart ${property.units.toString()}",
+                unitName: "Appart ${property.units.toString()}",
                 updated: property.updatedDate,
                 tenantStatus: '',
                 daysRemaining: 2,
+                onViewDetails: () {},
               ),
 
               const SizedBox(height: 80),

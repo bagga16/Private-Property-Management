@@ -193,12 +193,12 @@ class LeaseDetailsScreen extends StatelessWidget {
 
     return LeaseCard(
       name: tenant.name,
-      rent: tenant.rent,
+      rent: tenant.rentAmount,
       statusText: "Expire in $daysRemaining Days",
       statusColor: daysRemaining <= 7
           ? const Color(0xFFDF1525)
           : const Color(0xFF8BC83F),
-      tenantId: tenant.tenantId,
+      tenantId: tenant.id,
       unitId: tenant.unitId,
       paymentStatus: tenant.paymentStatus ?? "N/A",
       securityDeposit: tenant.securityDeposit ?? "N/A",

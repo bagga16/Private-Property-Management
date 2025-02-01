@@ -55,7 +55,7 @@ class MaintenanceCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Tenant ID: ${request.tenantId}",
+                  "Tenant ID: ${request.id.substring(0, 8)}",
                   style: const TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w400,

@@ -10,35 +10,6 @@ class SettingsScreen extends StatelessWidget {
   final SettingsController controller = Get.put(SettingsController());
   final AuthController authController = Get.find<AuthController>();
 
-  // void showEditPopup(String title, String field, String? initialValue) {
-  //   final textController = TextEditingController(text: initialValue);
-  //   Get.dialog(
-  //     AlertDialog(
-  //       title: Text(title),
-  //       content: TextField(
-  //         controller: textController,
-  //         decoration: const InputDecoration(hintText: "Enter new value"),
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () {
-  //             final newValue = textController.text.trim();
-  //             if (newValue.isNotEmpty) {
-  //               controller.editUserField(field, newValue);
-  //               Get.back();
-  //             }
-  //           },
-  //           child: const Text("OK"),
-  //         ),
-  //         TextButton(
-  //           onPressed: () => Get.back(),
-  //           child: const Text("Cancel"),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

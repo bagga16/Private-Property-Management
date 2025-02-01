@@ -75,6 +75,13 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         height: 48,
                         borderRadius: 10),
                     const SizedBox(height: 10),
+                    // **New Password Field**
+                    CustomTextField(
+                        controller: controller.passwordController,
+                        height: 48,
+                        hintText: "Password",
+                        isPassword: true), // ✅ Added Password Field
+                    const SizedBox(height: 10),
                     CustomTextField(
                         controller: controller.phoneController,
                         hintText: "Phone Number",
@@ -82,53 +89,148 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         height: 48,
                         borderRadius: 10),
                     const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () async {
-                              await controller.pickLeaseDate(
-                                  context, controller.leaseStartController);
-                            },
-                            child: AbsorbPointer(
-                              child: CustomTextField(
-                                controller: controller.leaseStartController,
-                                height: 48,
-                                hintText: "Lease Start Date",
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () async {
-                              await controller.pickLeaseDate(
-                                  context, controller.leaseEndController);
-                            },
-                            child: AbsorbPointer(
-                              child: CustomTextField(
-                                controller: controller.leaseEndController,
-                                height: 48,
-                                hintText: "Lease End Date",
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
                     CustomTextField(
                         controller: controller.rentController,
                         height: 48,
                         keyboardType: TextInputType.phone,
                         hintText: "Monthly Rent"),
                     const SizedBox(height: 10),
-                    CustomTextField(
-                        controller: controller.unitIdController,
-                        height: 48,
-                        keyboardType: TextInputType.phone,
-                        hintText: "Unit ID"),
+
+                    StreamBuilder<List<Map<String, String>>>(
+                      stream: controller.getPropertiesStream(),
+                      builder: (context, snapshot) {
+                        // **Check if the stream is still loading**
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+
+                        // **Check if there's an error**
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
+                        }
+
+                        // **Check if data is null or empty**
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text("No properties available"),
+                          );
+                        }
+
+                        var properties = snapshot.data!;
+
+                        return Container(
+                          height: 48,
+                          child: DropdownButtonFormField<String>(
+                            value: controller.selectedPropertyName.value.isEmpty
+                                ? null
+                                : controller.selectedPropertyName.value,
+                            decoration: InputDecoration(
+                              fillColor: const Color.fromRGBO(245, 244, 248, 1),
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              hintText: "Select Property",
+                              hintStyle: const TextStyle(
+                                  height: 2.5,
+                                  fontSize: 13,
+                                  color: Color.fromRGBO(37, 43, 92, 1),
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            style: const TextStyle(
+                                fontSize: 13,
+                                color: Color.fromRGBO(37, 43, 92, 1),
+                                fontWeight: FontWeight.w500),
+                            items: properties
+                                .map((property) => DropdownMenuItem(
+                                      value: property['title'],
+                                      child: Text(property['title']!),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              controller.selectedPropertyName.value = value!;
+                              controller.selectedPropertyId.value =
+                                  properties.firstWhere((element) =>
+                                      element['title'] == value)['id']!;
+                            },
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 10),
+                    Obx(() {
+                      if (controller.selectedPropertyId.value.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return StreamBuilder<List<String>>(
+                        stream: controller.getUnitsStream(
+                            controller.selectedPropertyId.value),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text("Error: ${snapshot.error}"));
+                          }
+
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Center(
+                              child:
+                                  Text("No units available for this property"),
+                            );
+                          }
+
+                          var units = snapshot.data!;
+
+                          return Container(
+                            height: 48,
+                            child: DropdownButtonFormField<String>(
+                              value: controller.selectedUnitId.value.isEmpty
+                                  ? null
+                                  : controller.selectedUnitId.value,
+                              decoration: InputDecoration(
+                                fillColor:
+                                    const Color.fromRGBO(245, 244, 248, 1),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: "Select Unit",
+                                hintStyle: const TextStyle(
+                                    height: 2.5,
+                                    fontSize: 13,
+                                    color: Color.fromRGBO(37, 43, 92, 1),
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color.fromRGBO(37, 43, 92, 1),
+                                  fontWeight: FontWeight.w500),
+                              items: units
+                                  .map((unitId) => DropdownMenuItem(
+                                        value: unitId,
+                                        child: Text("Unit $unitId"),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                controller.selectedUnitId.value = value!;
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    }),
+
                     const SizedBox(height: 10),
                     Container(
                       height: 48,
@@ -168,12 +270,7 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    CustomTextField(
-                        controller: controller.securityDepositController,
-                        height: 48,
-                        keyboardType: TextInputType.phone,
-                        hintText: "Security Deposit"),
+
                     const SizedBox(height: 10),
                     Container(
                       height: 48,
@@ -208,80 +305,8 @@ class _AddTanentsScreenState extends State<AddTanentsScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
 
-                    // GestureDetector(
-                    //   onTap: controller.pickFile,
-                    //   child: Container(
-                    //     width: double.infinity,
-                    //     height: 48,
-                    //     decoration: BoxDecoration(
-                    //         color: const Color.fromRGBO(245, 244, 248, 1),
-                    //         borderRadius: BorderRadius.circular(12)),
-                    //     child: Row(
-                    //       children: [
-                    //         const SizedBox(width: 10),
-                    //         const Icon(Icons.attach_file),
-                    //         const SizedBox(width: 10),
-                    //         Obx(() {
-                    //           return Text(
-                    //             controller.selectedFile.value != null
-                    //                 ? controller.selectedFile.value!.path
-                    //                     .split('/')
-                    //                     .last
-                    //                 : "Select Lease Document",
-                    //             style: const TextStyle(
-                    //                 fontSize: 13,
-                    //                 color: Color.fromRGBO(37, 43, 92, 1),
-                    //                 fontWeight: FontWeight.w600),
-                    //           );
-                    //         }),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-
-                    GestureDetector(
-                      onTap: controller.pickFiles,
-                      child: Container(
-                        width: double.infinity,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(245, 244, 248, 1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            const Icon(Icons.attach_file),
-                            const SizedBox(width: 10),
-                            Obx(() {
-                              if (controller.selectedFiles.isEmpty) {
-                                return const Text(
-                                  "Select Lease Documents",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(37, 43, 92, 1),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              } else {
-                                return Text(
-                                  "${controller.selectedFiles.length} file(s) selected",
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Color.fromRGBO(37, 43, 92, 1),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              }
-                            }),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 70),
                     Center(
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width - 96,

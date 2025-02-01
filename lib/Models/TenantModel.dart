@@ -10,7 +10,7 @@ class Tenant {
   final String leaseEnd;
   final String createdDate;
   final String updatedDate;
-  final String rent;
+  final String rentAmount;
   final String? securityDeposit;
   final String? paymentStatus;
 
@@ -26,7 +26,7 @@ class Tenant {
     required this.leaseEnd,
     required this.createdDate,
     required this.updatedDate,
-    required this.rent,
+    required this.rentAmount,
     this.securityDeposit,
     this.paymentStatus,
   });
@@ -36,7 +36,7 @@ class Tenant {
     return Tenant(
       id: id,
       name: map['name'] ?? 'N/A',
-      status: map['status'] ?? 'N/A',
+      status: map['status'] ?? 'In-Active',
       email: map['email'] ?? 'N/A',
       phone: map['phone'] ?? 'N/A',
       tenantId: map['tenantId'] ?? 'N/A',
@@ -45,7 +45,7 @@ class Tenant {
       leaseEnd: map['leaseEnd'] ?? 'N/A',
       createdDate: map['createdDate'] ?? 'N/A',
       updatedDate: map['updatedDate'] ?? 'N/A',
-      rent: map['rent'] ?? 'N/A',
+      rentAmount: map['rentAmount'] ?? '0',
       securityDeposit: map['securityDeposit'] ?? 'N/A',
       paymentStatus: map['paymentStatus'] ?? 'N/A',
     );
@@ -65,7 +65,7 @@ class Tenant {
       'leaseEnd': leaseEnd,
       'createdDate': createdDate,
       'updatedDate': updatedDate,
-      'rent': rent,
+      'rentAmount': rentAmount,
       'securityDeposit': securityDeposit,
       'paymentStatus': paymentStatus
     };

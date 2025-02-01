@@ -30,17 +30,17 @@ class EditTenantController extends GetxController {
   void initialize(Tenant tenant) {
     tenantId = tenant.id;
 
-    tenantIdController.text = tenant.tenantId;
+    tenantIdController.text = tenant.id;
     firstNameController.text = tenant.name.split(' ').first;
     lastNameController.text = tenant.name.split(' ').last;
     emailController.text = tenant.email;
     phoneController.text = tenant.phone;
     leaseStartController.text = tenant.leaseStart;
     leaseEndController.text = tenant.leaseEnd;
-    rentController.text = tenant.rent;
-    securityDepositController.text = tenant.securityDeposit ?? '';
-    selectedStatus.value = tenant.status;
-    paymentStatus.value = tenant.paymentStatus ?? '';
+    rentController.text = tenant.rentAmount;
+    //securityDepositController.text = tenant. ?? '';
+    //selectedStatus.value = tenant.;
+    //paymentStatus.value = tenant.st ?? '';
   }
 
   /// Update Tenant Details

@@ -55,7 +55,7 @@ class TenantCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '\$${tenant.rent}/',
+                      '\$${tenant.rentAmount}/',
                       style: const TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
@@ -83,7 +83,7 @@ class TenantCard extends StatelessWidget {
                   tenant.email,
                 ),
                 Text(
-                  "TenantID: ${tenant.tenantId}",
+                  "TenantID: ${tenant.id.substring(0, 7)}",
                   style: const TextStyle(
                     fontSize: 9,
                     color: Color.fromRGBO(83, 88, 122, 1),
@@ -101,7 +101,7 @@ class TenantCard extends StatelessWidget {
                   tenant.phone,
                 ),
                 Text(
-                  "UnitID: ${tenant.unitId}",
+                  "UnitID: ${tenant.unitId.substring(0, 3)}",
                   style: const TextStyle(
                     fontSize: 9,
                     color: Color.fromRGBO(83, 88, 122, 1),

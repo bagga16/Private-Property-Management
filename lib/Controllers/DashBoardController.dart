@@ -42,7 +42,6 @@ class DashboardController extends GetxController {
         fetchTotalMaintenanceRequests(),
         fetchTotalWorkers(),
         fetchTotalAnnouncements(),
-        fetchTotalUnits()
       ]);
     } catch (e) {
       print("Error::: Failed to fetch dashboard data: $e");
@@ -101,13 +100,13 @@ class DashboardController extends GetxController {
 
   /// Fetch total payments
   Future<void> fetchTotalPayments() async {
-    final snapshot = await _firestore.collection('All Tenants').get();
+    final snapshot = await _firestore.collection('All Payments').get();
     totalPayments.value = snapshot.docs.length;
   }
 
   /// Fetch total leases
   Future<void> fetchTotalLeases() async {
-    final snapshot = await _firestore.collection('All Tenants').get();
+    final snapshot = await _firestore.collection('All Users').get();
     totalLeases.value = snapshot.docs.length;
   }
 
@@ -127,11 +126,5 @@ class DashboardController extends GetxController {
   Future<void> fetchTotalAnnouncements() async {
     final snapshot = await _firestore.collection('All Announcements').get();
     totalAnnouncements.value = snapshot.docs.length;
-  }
-
-  /// Fetch total announcements
-  Future<void> fetchTotalUnits() async {
-    final snapshot = await _firestore.collection('All Units').get();
-    totalUnits.value = snapshot.docs.length;
   }
 }
